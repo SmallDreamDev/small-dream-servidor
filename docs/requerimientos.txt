@@ -1,0 +1,35 @@
+Listo: 
+    - Lenguaje(s) - Javascript/Node (Cliente - Servidor)
+    - Tecnologías/frameworks:
+        - Analisis estático del código: Codacy
+        - Integración contínua: Travis
+        - Code coverage: Codecov
+        - Frameworks interfaz cliente: React
+        - Posible despliegue: AWS, Kubernetes, Docker, GitHub Pages, Herokku
+    - Persistencia:
+        - NoSQL - MongoDB M0 - 512MB. Factible con posibilidad de aumentar a M2 - 2 GB
+    - Testing
+        - Unitarias: Jest con Javascript
+        - Rendimiento (?): Gatling
+        - Aceptación (?): Puppeteer, Cucumber
+
+Arquitectura (Api(s), docs(?))
+    Quality attributes, refinar y priorizar
+    Diseño para modelo de dominio
+        CRUD entidades
+        Clases modelo
+        Bdatos
+    Comunicación en LAN (Buzón, Eventos?, sth)
+        Investigar creación servidor como ejecutable
+
+Prueba de la(s) usuaria(s)
+Gestión de información de actividades pero podemos llegar a tener campos dinámicos
+Diseño interfaz, prototipos, referencias de otras apps, ver interfaz1.png
+Filtrado de datos para crear queries (potencialmente infinitas combinaciones)
+Contabilidad, lógica (Nuevo apartado, precios, generar ticket/invoice (pdf(?)))
+Crear módulo para poder notificar a los padres con el cumpleaños de los padres
+    Crear plantilla email genérica para enviar código con diversos beneficios al canjearse dentro de la aplicación
+    Correo genérico, código 6-7 caracteres enviar email, guardar en la bd. Comprobar código en SmallDream y si existe, son las gerentes las que escogen el premio
+Posible sistema de puntos para los perfiles(No ahora, tener en cuenta)
+Categorías de actividad (nueva tabla para relacionar actividad con categoría)
+Fichas para cualquier componente: Usuarios/as, actividades, profesores/monitores
