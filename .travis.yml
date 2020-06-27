@@ -22,4 +22,3 @@ deploy:
       only:
         - master
         - develop
-        - primera-prueba
