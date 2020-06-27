@@ -1,0 +1,24 @@
+language: node_js
+node_js:
+  - 12.18.0
+cache:
+  directories:
+    - node_modules
+before_install:
+  - sudo apt-get update
+before_script:
+  - export NODE_OPTIONS=--max_old_space_size=8192
+script:
+  - npm install -g codecov
+  - npm test && codecov
+  - npm run build
+deploy:
+  provider: pages
+  skip_cleanup: true
+  github_token: $github_token
+  local_dir: build
+  on:
+    branches:
+      only:
+        - master
+        - develop
