@@ -18,7 +18,4 @@ deploy:
   github_token: $github_token
   local_dir: build
   on:
-    branches:
-      only:
-        - master
-        - develop
+    branch: master
