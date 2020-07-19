@@ -1,11 +1,20 @@
 FROM ubuntu:18.04
 
-COPY ./* /app
-
-RUN apt-get update && apt-get upgrade
-RUN apt install nodejs -y
+RUN apt-get update && apt-get upgrade -y
+RUN apt-get install nodejs npm -y
 RUN apt-get clean
+RUN mkdir -p /home/node/app/node_modules && chown -R root:root /home/node/app
 
-EXPOSE 7889
+WORKDIR /home/node/app
 
-CMD ["sh", "bootstrap.sh"]
+COPY package*.json ./
+
+USER root
+
+RUN npm install
+
+COPY --chown=root:root . .
+
+EXPOSE 8080
+
+CMD [ "node", "App.js" ]
