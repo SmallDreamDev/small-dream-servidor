@@ -23,4 +23,5 @@ require("./src/routes/r.js")(app, gestorBD);
 //Listeners
 app.listen(app.get("port"), function(){
     console.log("Servidor activo");
+    console.log("Puerto: " + app.get("port"));
  });
