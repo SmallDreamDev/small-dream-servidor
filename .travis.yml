@@ -11,8 +11,7 @@ before_script:
   - export NODE_OPTIONS=--max_old_space_size=8192
 script:
   - npm install -g codecov
-  - npm test && codecov
-  - npm run build
+  - codecov
 deploy:
   provider: pages
   skip_cleanup: true
