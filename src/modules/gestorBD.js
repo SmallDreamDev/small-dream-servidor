@@ -1,17 +1,17 @@
 module.exports = {
-    mongo : null,
-    app : null,
-    init : function(app, mongo) {
+    mongo: null,
+    app: null,
+    init: function (app, mongo) {
         this.mongo = mongo;
         this.app = app;
     },
-    getClients : function(criteria, functionCallback){
-        this.mongo.MongoClient.connect(this.app.get('db'), function(err, db) {
+    getClients: function (criteria, functionCallback) {
+        this.mongo.MongoClient.connect(this.app.get('db'), function (err, db) {
             if (err) {
                 functionCallback(null);
             } else {
                 let collection = db.collection('clientes');
-                collection.find(criteria).toArray(function(err, clients) {
+                collection.find(criteria).toArray(function (err, clients) {
                     if (err) {
                         functionCallback(null);
                     } else {
@@ -22,14 +22,14 @@ module.exports = {
             }
         });
     },
-    getClient : function(id, functionCallback){
-        this.mongo.MongoClient.connect(this.app.get('db'), function(err, db) {
+    getClient: function (id, functionCallback) {
+        this.mongo.MongoClient.connect(this.app.get('db'), function (err, db) {
             if (err) {
                 functionCallback(null);
             } else {
                 let collection = db.collection('clientes');
-                var criteria = { "_id" : id}
-                collection.find(criteria).toArray(function(err, clients) {
+                var criteria = { "_id": id }
+                collection.find(criteria).toArray(function (err, clients) {
                     if (err) {
                         functionCallback(null);
                     } else {
@@ -40,13 +40,13 @@ module.exports = {
             }
         });
     },
-    insertClient : function(client, functionCallback) {
-        this.mongo.MongoClient.connect(this.app.get('db'), function(err, db) {
+    insertClient: function (client, functionCallback) {
+        this.mongo.MongoClient.connect(this.app.get('db'), function (err, db) {
             if (err) {
                 functionCallback(null);
             } else {
                 let collection = db.collection('clientes');
-                collection.insert(client, function(err, result) {
+                collection.insert(client, function (err, result) {
                     if (err) {
                         functionCallback(null);
                     } else {
@@ -57,13 +57,13 @@ module.exports = {
             }
         });
     },
-    getActivities : function(criteria, functionCallback){
-        this.mongo.MongoClient.connect(this.app.get('db'), function(err, db) {
+    getActivities: function (criteria, functionCallback) {
+        this.mongo.MongoClient.connect(this.app.get('db'), function (err, db) {
             if (err) {
                 functionCallback(null);
             } else {
                 let collection = db.collection('actividades');
-                collection.find(criteria).toArray(function(err, activities) {
+                collection.find(criteria).toArray(function (err, activities) {
                     if (err) {
                         functionCallback(null);
                     } else {
@@ -74,14 +74,14 @@ module.exports = {
             }
         });
     },
-    getActivity : function(id, functionCallback){
-        this.mongo.MongoClient.connect(this.app.get('db'), function(err, db) {
+    getActivity: function (id, functionCallback) {
+        this.mongo.MongoClient.connect(this.app.get('db'), function (err, db) {
             if (err) {
                 functionCallback(null);
             } else {
                 let collection = db.collection('actividades');
-                var criteria = { "_id" : id}
-                collection.find(criteria).toArray(function(err, activities) {
+                var criteria = { "_id": id }
+                collection.find(criteria).toArray(function (err, activities) {
                     if (err) {
                         functionCallback(null);
                     } else {
@@ -92,13 +92,13 @@ module.exports = {
             }
         });
     },
-    insertActivity : function(activity, functionCallback) {
-        this.mongo.MongoClient.connect(this.app.get('db'), function(err, db) {
+    insertActivity: function (activity, functionCallback) {
+        this.mongo.MongoClient.connect(this.app.get('db'), function (err, db) {
             if (err) {
                 functionCallback(null);
             } else {
                 let collection = db.collection('actividades');
-                collection.insert(activity, function(err, result) {
+                collection.insert(activity, function (err, result) {
                     if (err) {
                         functionCallback(null);
                     } else {
@@ -109,13 +109,13 @@ module.exports = {
             }
         });
     },
-    getInstructors : function(criteria, functionCallback){
-        this.mongo.MongoClient.connect(this.app.get('db'), function(err, db) {
+    getInstructors: function (criteria, functionCallback) {
+        this.mongo.MongoClient.connect(this.app.get('db'), function (err, db) {
             if (err) {
                 functionCallback(null);
             } else {
                 let collection = db.collection('monitores');
-                collection.find(criteria).toArray(function(err, instructors) {
+                collection.find(criteria).toArray(function (err, instructors) {
                     if (err) {
                         functionCallback(null);
                     } else {
@@ -126,14 +126,14 @@ module.exports = {
             }
         });
     },
-    getInstructor : function(id, functionCallback){
-        this.mongo.MongoClient.connect(this.app.get('db'), function(err, db) {
+    getInstructor: function (id, functionCallback) {
+        this.mongo.MongoClient.connect(this.app.get('db'), function (err, db) {
             if (err) {
                 functionCallback(null);
             } else {
                 let collection = db.collection('monitores');
-                var criteria = { "_id" : id}
-                collection.find(criteria).toArray(function(err, instructors) {
+                var criteria = { "_id": id }
+                collection.find(criteria).toArray(function (err, instructors) {
                     if (err) {
                         functionCallback(null);
                     } else {
@@ -144,13 +144,13 @@ module.exports = {
             }
         });
     },
-    insertInstructor : function(instructor, functionCallback) {
-        this.mongo.MongoClient.connect(this.app.get('db'), function(err, db) {
+    insertInstructor: function (instructor, functionCallback) {
+        this.mongo.MongoClient.connect(this.app.get('db'), function (err, db) {
             if (err) {
                 functionCallback(null);
             } else {
                 let collection = db.collection('monitores');
-                collection.insert(activity, function(err, result) {
+                collection.insert(activity, function (err, result) {
                     if (err) {
                         functionCallback(null);
                     } else {
