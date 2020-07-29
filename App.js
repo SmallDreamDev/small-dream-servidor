@@ -2,10 +2,15 @@ let express = require('express');
 let bodyParser = require('body-parser');
 let gestorBD = require("./src/modules/gestorBD.js");
 let mongo = require('mongodb');
+let validations = require("./src/modules/validations.js");
+let factory = require("./src/modules/factory.js");
+let crud = require("./src/modules/crud.js");
 
 //Inicializacion variables
 let app = express();
 gestorBD.init(app,mongo);
+factory.init(validations);
+crud.init(gestorBD, factory);
 
 //Uses
 app.use(bodyParser.json());
@@ -18,7 +23,7 @@ app.set('db', "mongodb://sdamin:suyx74zsMzW%@smalldream-shard-00-00.ipxdb.mongod
 
 
 //Routes
-require("./src/routes/r.js")(app, gestorBD);
+require("./src/routes/rClients.js")(app, crud);
 
 //Listeners
 app.listen(app.get("port"), function(){
