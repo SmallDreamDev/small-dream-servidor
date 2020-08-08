@@ -1,57 +1,57 @@
 module.exports = {
     validations: null,
-    init: function(validations){
+    init: function (validations) {
         this.validations = validations;
     },
-    createClient(requestBody, functionCallback){
+    createClient(requestBody, functionCallback) {
         let clientToValidate = {
             nombre_completo: requestBody.nombre_completo,
             dni: requestBody.dni,
             contacto: requestBody.contacto,
             fecha_nacimiento: requestBody.fecha_nacimiento,
         }
-        this.validations.checkValidClient(clientToValidate, function(client){
+        this.validations.checkValidClient(clientToValidate, function (client) {
             functionCallback(client);
         });
     },
-    createActivity(requestBody, functionCallback){
+    createActivity(requestBody, functionCallback) {
         let activityToValidate = {
             nombre: requestBody.nombre,
             zona: requestBody.zona
         }
-        this.validations.checkValidActivity(activityToValidate, function(activity){
+        this.validations.checkValidActivity(activityToValidate, function (activity) {
             functionCallback(activity);
         });
     },
-    createCategory(requestBody, functionCallback){
+    createCategory(requestBody, functionCallback) {
         let categoryToValidate = {
             nombre: requestBody.nombre,
             zona: requestBody.zona
         }
-        this.validations.checkValidCategory(categoryToValidate, function(category){
+        this.validations.checkValidCategory(categoryToValidate, function (category) {
             functionCallback(category);
         });
     },
-    createInstructor(requestBody, functionCallback){
+    createInstructor(requestBody, functionCallback) {
         let instructorToValidate = {
             nombre_completo: requestBody.nombre_completo,
             dni: requestBody.dni,
             contacto: requestBody.contacto
         }
-        this.validations.checkValidInstructor(instructorToValidate, function(instructor){
+        this.validations.checkValidInstructor(instructorToValidate, function (instructor) {
             functionCallback(instructor);
         });
     },
-    createMaterial(requestBody, functionCallback){
+    createMaterial(requestBody, functionCallback) {
         let materialToValidate = {
             precio: requestBody.precio,
             descripcion: requestBody.descripcion
         }
-        this.validations.checkValidMaterial(materialToValidate, function(material){
+        this.validations.checkValidMaterial(materialToValidate, function (material) {
             functionCallback(material);
         });
     },
-    createSchedule(requestBody, functionCallback){
+    createSchedule(requestBody, functionCallback) {
         let scheduleToValidate = {
             hora_inicio: requestBody.hora_inicio,
             hora_fin: requestBody.hora_fin,
@@ -59,11 +59,11 @@ module.exports = {
             id_monitor: requestBody.id_monitor,
             fecha: requestBody.fecha
         }
-        this.validations.checkValidSchedule(scheduleToValidate, function(schedule){
+        this.validations.checkValidSchedule(scheduleToValidate, function (schedule) {
             functionCallback(schedule);
         });
     },
-    createWorkshop(requestBody, functionCallback){
+    createWorkshop(requestBody, functionCallback) {
         let workshopToValidate = {
             id_monitor: requestBody.id_monitor,
             id_actividad: requestBody.id_actividad,
@@ -71,7 +71,7 @@ module.exports = {
             plazas: requestBody.plazas,
             id_modo_pago: requestBody.id_modo_pago
         }
-        this.validations.checkValidWorkshop(workshopToValidate, function(workshop){
+        this.validations.checkValidWorkshop(workshopToValidate, function (workshop) {
             functionCallback(workshop);
         });
     }
