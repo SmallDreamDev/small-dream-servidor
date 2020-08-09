@@ -1,3 +1,5 @@
+const { call } = require("body-parser");
+
 module.exports = {
     gestorBD: null,
     factory: null,
@@ -5,113 +7,38 @@ module.exports = {
         this.gestorBD = gestorBD;
         this.factory = factory;
     },
-    listCollection: function (collectionName, criteria, functionCallback) {
+    listCollection: function (collectionName, criteria, callbackFunction) {
         this.gestorBD.getEntityCollection(collectionName, criteria, function (collectionList) {
-            functionCallback(collectionList);
+            callbackFunction(collectionList);
         });
     },
-    getInstance: function (collectionName, id, functionCallback) {
+    getInstance: function (collectionName, id, callbackFunction) {
         this.gestorBD.getEntityById(collectionName, id, function (instance) {
-            functionCallback(instance);
+            callbackFunction(instance);
         });
     },
-    createClient: function (requestBody, functionCallback) {
-        this.factory.createClient(requestBody, function (client) {
-            if (client === null) {
-                functionCallback(null);
-            } else {
-                this.gestorBD.insertEntity("clientes", client, function (id) {
-                    functionCallback(id);
-                });
-            }
-        })
+    createEntity: function (collectionName, requestBody, callbackFunction) {
+        switch (collectionName) {
+            case "activities": this.factory.createActivity(requestBody, this.factoryCallbackFunction("actividades", callbackFunction)); break;
+            case "categories": this.factory.createCategory(requestBody, this.factoryCallbackFunction("categorias", callbackFunction)); break;
+            case "clients": this.factory.createClient(requestBody, this.factoryCallbackFunction("clientes", callbackFunction)); break;
+            case "instructors": this.factory.createInstructor(requestBody, this.factoryCallbackFunction("monitores", callbackFunction)); break;
+            case "materials": this.factory.createMaterial(requestBody, this.factoryCallbackFunction("materiales", callbackFunction)); break;
+            case "programmes": this.factory.createProgram(requestBody, this.factoryCallbackFunction("programas", callbackFunction)); break;
+            case "schedules": this.factory.createSchedule(requestBody, this.factoryCallbackFunction("horarios", callbackFunction)); break;
+            case "users": this.factory.createUser(requestBody, this.factoryCallbackFunction("usuarios", callbackFunction)); break;
+            case "workshops": this.factory.createWorkshop(requestBody, this.factoryCallbackFunction("talleres", callbackFunction)); break;
+        }
     },
-    createActivity: function (requestBody, functionCallback) {
-        this.factory.createActivity(requestBody, function (activity) {
-            if (activity === null) {
-                functionCallback(null);
+    factoryCallbackFunction: function (collectionName, callbackFunction1) {
+        return function (newEntity, callbackFunction = callbackFunction1) {
+            if (newEntity === null) {
+                callbackFunction(null);
             } else {
-                this.gestorBD.insertEntity("actividades", activity, function (id) {
-                    functionCallback(id);
+                this.gestorBD.insertEntity(collectionName, newEntity, function (id) {
+                    callbackFunction(id);
                 });
             }
-        });
-    },
-    createCategory: function (requestBody, functionCallback) {
-        this.factory.createCategory(requestBody, function (category) {
-            if (category === null) {
-                functionCallback(null);
-            } else {
-                this.gestorBD.insertEntity("categorias", category, function (id) {
-                    functionCallback(id);
-                });
-            }
-        });
-    },
-    createInstructor: function (requestBody, functionCallback) {
-        this.factory.createActivity(requestBody, function (instructor) {
-            if (instructor === null) {
-                functionCallback(null);
-            } else {
-                this.gestorBD.insertEntity("monitores", instructor, function (id) {
-                    functionCallback(id);
-                });
-            }
-        });
-    },
-    createMaterial: function (requestBody, functionCallback) {
-        this.factory.createActivity(requestBody, function (material) {
-            if (material === null) {
-                functionCallback(null);
-            } else {
-                this.gestorBD.insertEntity("materiales", material, function (id) {
-                    functionCallback(id);
-                });
-            }
-        });
-    },
-    createCategory: function (requestBody, functionCallback) {
-        this.factory.createActivity(requestBody, function (category) {
-            if (category === null) {
-                functionCallback(null);
-            } else {
-                this.gestorBD.insertEntity("categorias", category, function (id) {
-                    functionCallback(id);
-                });
-            }
-        });
-    },
-    createProgram: function (requestBody, functionCallback) {
-        this.factory.createActivity(requestBody, function (program) {
-            if (program === null) {
-                functionCallback(null);
-            } else {
-                this.gestorBD.insertEntity("programas", program, function (id) {
-                    functionCallback(id);
-                });
-            }
-        });
-    },
-    createSchedule: function (requestBody, functionCallback) {
-        this.factory.createActivity(requestBody, function (schedule) {
-            if (schedule === null) {
-                functionCallback(null);
-            } else {
-                this.gestorBD.insertEntity("horarios", schedule, function (id) {
-                    functionCallback(id);
-                });
-            }
-        });
-    },
-    createWorkshop: function (requestBody, functionCallback) {
-        this.factory.createActivity(requestBody, function (workshop) {
-            if (workshop === null) {
-                functionCallback(null);
-            } else {
-                this.gestorBD.insertEntity("talleres", workshop, function (id) {
-                    functionCallback(id);
-                });
-            }
-        });
+        }
     }
 };

@@ -29,7 +29,7 @@ module.exports = function (app, crud, collectionName) {
 
     app.get(`/${collectionName}/:id`, function (req, res) {
         let entityId = req.params.id;
-        if (isIdValid(entityId)) {
+        if (isIdValid(entityId, res)) {
             crud.getInstance(collectionName, entityId, function (entityData) {
                 if (entityData === null) {
                     res.status(500);
@@ -64,7 +64,7 @@ module.exports = function (app, crud, collectionName) {
 
     app.post(`/${collectionName}/update/:id`, function (req, res) {
         let entityId = req.params.id;
-        if (isIdValid(entityId)) {
+        if (isIdValid(entityId, res)) {
             crud.updateEntity(collectionName, entityId, req.body, function () {
 
             });
@@ -73,7 +73,7 @@ module.exports = function (app, crud, collectionName) {
 
     app.post(`/${collectionName}/delete/:id`, function (req, res) {
         let entityId = req.params.id;
-        if (isIdValid(entityId)) {
+        if (isIdValid(entityId, res)) {
             crud.deleteEntity(collectionName, entityId, function () {
 
             });
