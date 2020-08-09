@@ -1,3 +1,5 @@
+const { call } = require("body-parser");
+
 module.exports = {
     gestorBD: null,
     factory: null,

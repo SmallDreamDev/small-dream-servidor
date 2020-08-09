@@ -5,7 +5,7 @@ module.exports = {
         this.mongo = mongo;
         this.app = app;
     },
-    getEntityCollection: function (collectionName, criteria, functionCallback){
+    getEntityCollection: function (collectionName, criteria, functionCallback) {
         this.mongo.MongoClient.connect(this.app.get('db'), function (err, db) {
             if (err) {
                 functionCallback(null);
