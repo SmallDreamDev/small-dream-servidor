@@ -10,7 +10,7 @@ function isIdValid(id, res) {
 
 module.exports = function (app, crud, collectionName) {
 
-    app.get(`/${collectionName}/list`, function (req, res) {
+    app.get(`/${collectionName}/listar`, function (req, res) {
         let criteria = {};
         crud.listCollection(collectionName, criteria, function (entityList) {
             if (entityList === null) {
@@ -46,7 +46,7 @@ module.exports = function (app, crud, collectionName) {
         }
     });
 
-    app.post(`/${collectionName}/create`, function (req, res) {
+    app.post(`/${collectionName}/crear`, function (req, res) {
         crud.createEntity(collectionName, req.body, function (entityId) {
             if (entityId === null) {
                 res.status(500);
@@ -62,7 +62,7 @@ module.exports = function (app, crud, collectionName) {
         });
     });
 
-    app.post(`/${collectionName}/update/:id`, function (req, res) {
+    app.post(`/${collectionName}/actualizar/:id`, function (req, res) {
         let entityId = req.params.id;
         if (isIdValid(entityId, res)) {
             crud.updateEntity(collectionName, entityId, req.body, function () {
@@ -71,7 +71,7 @@ module.exports = function (app, crud, collectionName) {
         }
     });
 
-    app.post(`/${collectionName}/delete/:id`, function (req, res) {
+    app.post(`/${collectionName}/eliminar/:id`, function (req, res) {
         let entityId = req.params.id;
         if (isIdValid(entityId, res)) {
             crud.deleteEntity(collectionName, entityId, function () {

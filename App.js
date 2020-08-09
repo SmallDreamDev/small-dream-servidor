@@ -19,19 +19,19 @@ app.use(bodyParser.json());
 
 //Sets
 app.set("port", 8080);
-app.set('db', "mongodb://sdamin:suyx74zsMzW%@smalldream-shard-00-00.ipxdb.mongodb.net:27017,smalldream-shard-00-01.ipxdb.mongodb.net:27017,smalldream-shard-00-02.ipxdb.mongodb.net:27017/smalldream?ssl=true&replicaSet=atlas-in3ped-shard-0&authSource=admin&retryWrites=true&w=majority");
+app.set("db", "mongodb://sdadmin:5mAnammfatNoxO2J@smalldream-shard-00-00.ipxdb.mongodb.net:27017,smalldream-shard-00-01.ipxdb.mongodb.net:27017,smalldream-shard-00-02.ipxdb.mongodb.net:27017/smalldream?ssl=true&replicaSet=atlas-in3ped-shard-0&authSource=admin&retryWrites=true&w=majority");
 
 //Routes
 // require("./src/routes/rClients.js")(app, crud);
-require("./src/routes/rEntityCrud.js")(app, crud, "activities");
-require("./src/routes/rEntityCrud.js")(app, crud, "categories");
-require("./src/routes/rEntityCrud.js")(app, crud, "clients");
-require("./src/routes/rEntityCrud.js")(app, crud, "instructors");
-require("./src/routes/rEntityCrud.js")(app, crud, "materials");
-require("./src/routes/rEntityCrud.js")(app, crud, "programmes");
-require("./src/routes/rEntityCrud.js")(app, crud, "schedules");
-require("./src/routes/rEntityCrud.js")(app, crud, "users");
-require("./src/routes/rEntityCrud.js")(app, crud, "workshops");
+require("./src/routes/rEntityCrud.js")(app, crud, "actividades");
+require("./src/routes/rEntityCrud.js")(app, crud, "categorias");
+require("./src/routes/rEntityCrud.js")(app, crud, "clientes");
+require("./src/routes/rEntityCrud.js")(app, crud, "monitores");
+require("./src/routes/rEntityCrud.js")(app, crud, "materiales");
+require("./src/routes/rEntityCrud.js")(app, crud, "programas");
+require("./src/routes/rEntityCrud.js")(app, crud, "horarios");
+require("./src/routes/rEntityCrud.js")(app, crud, "usuarios");
+require("./src/routes/rEntityCrud.js")(app, crud, "talleres");
 
 //Listeners
 app.listen(app.get("port"), function () {

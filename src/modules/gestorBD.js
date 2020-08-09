@@ -12,11 +12,7 @@ module.exports = {
             } else {
                 let collection = db.collection(collectionName);
                 collection.find(criteria).toArray(function (err, list) {
-                    if (err) {
-                        functionCallback(null);
-                    } else {
-                        functionCallback(list);
-                    }
+                    functionCallback(err ? null : list);
                     db.close();
                 });
             }
@@ -30,11 +26,7 @@ module.exports = {
                 let collection = db.collection(collectionName);
                 var criteria = { "_id": id }
                 collection.find(criteria).toArray(function (err, list) {
-                    if (err) {
-                        functionCallback(null);
-                    } else {
-                        functionCallback(list[0]);
-                    }
+                    functionCallback(err ? null : list[0]);
                     db.close();
                 });
             }
@@ -47,11 +39,7 @@ module.exports = {
             } else {
                 let collection = db.collection(collectionName);
                 collection.insert(entity, function (err, result) {
-                    if (err) {
-                        functionCallback(null);
-                    } else {
-                        functionCallback(result.ops[0]._id);
-                    }
+                    functionCallback(err ? null : result.ops[0]._id);
                     db.close();
                 });
             }
