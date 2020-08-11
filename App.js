@@ -7,7 +7,7 @@ let factory = require("./src/modules/factory.js");
 let crud = require("./src/modules/crud.js");
 
 //Load environment variables
-require("dotenv").config()
+require("dotenv").config();
 
 //Variables initialization
 let app = express();

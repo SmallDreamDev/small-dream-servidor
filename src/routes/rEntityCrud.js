@@ -1,4 +1,5 @@
 function isIdValid(id, res) {
+    // If null, if undefined, if ""
     if (!id) {
         res.status(400);
         res.json({
@@ -21,7 +22,7 @@ module.exports = function (app, crud, collectionName) {
             } else {
                 res.status(200);
                 res.json({
-                    entityList: JSON.stringify(entityList)
+                    entityList: entityList
                 });
             }
         });
@@ -39,7 +40,7 @@ module.exports = function (app, crud, collectionName) {
                 } else {
                     res.status(200);
                     res.json({
-                        entityData: JSON.stringify(entityData)
+                        entityData: entityData
                     });
                 }
             });
@@ -56,7 +57,7 @@ module.exports = function (app, crud, collectionName) {
             } else {
                 res.status(201);
                 res.json({
-                    entityId: JSON.stringify(entityId)
+                    entityId: entityId
                 });
             }
         });
