@@ -5,152 +5,48 @@ module.exports = {
         this.mongo = mongo;
         this.app = app;
     },
-    getClients: function (criteria, functionCallback) {
+    getEntityCollection: function (collectionName, criteria, functionCallback){
         this.mongo.MongoClient.connect(this.app.get('db'), function (err, db) {
             if (err) {
                 functionCallback(null);
             } else {
-                let collection = db.collection('clientes');
-                collection.find(criteria).toArray(function (err, clients) {
+                let collection = db.collection(collectionName);
+                collection.find(criteria).toArray(function (err, list) {
                     if (err) {
                         functionCallback(null);
                     } else {
-                        functionCallback(clients);
+                        functionCallback(list);
                     }
                     db.close();
                 });
             }
         });
     },
-    getClient: function (id, functionCallback) {
+    getEntityById: function (collectionName, id, functionCallback) {
         this.mongo.MongoClient.connect(this.app.get('db'), function (err, db) {
             if (err) {
                 functionCallback(null);
             } else {
-                let collection = db.collection('clientes');
+                let collection = db.collection(collectionName);
                 var criteria = { "_id": id }
-                collection.find(criteria).toArray(function (err, clients) {
+                collection.find(criteria).toArray(function (err, list) {
                     if (err) {
                         functionCallback(null);
                     } else {
-                        functionCallback(clients[0]);
+                        functionCallback(list[0]);
                     }
                     db.close();
                 });
             }
         });
     },
-    insertClient: function (client, functionCallback) {
+    insertEntity: function (collectionName, entity, functionCallback) {
         this.mongo.MongoClient.connect(this.app.get('db'), function (err, db) {
             if (err) {
                 functionCallback(null);
             } else {
-                let collection = db.collection('clientes');
-                collection.insert(client, function (err, result) {
-                    if (err) {
-                        functionCallback(null);
-                    } else {
-                        functionCallback(result.ops[0]._id);
-                    }
-                    db.close();
-                });
-            }
-        });
-    },
-    getActivities: function (criteria, functionCallback) {
-        this.mongo.MongoClient.connect(this.app.get('db'), function (err, db) {
-            if (err) {
-                functionCallback(null);
-            } else {
-                let collection = db.collection('actividades');
-                collection.find(criteria).toArray(function (err, activities) {
-                    if (err) {
-                        functionCallback(null);
-                    } else {
-                        functionCallback(activities);
-                    }
-                    db.close();
-                });
-            }
-        });
-    },
-    getActivity: function (id, functionCallback) {
-        this.mongo.MongoClient.connect(this.app.get('db'), function (err, db) {
-            if (err) {
-                functionCallback(null);
-            } else {
-                let collection = db.collection('actividades');
-                var criteria = { "_id": id }
-                collection.find(criteria).toArray(function (err, activities) {
-                    if (err) {
-                        functionCallback(null);
-                    } else {
-                        functionCallback(activities[0]);
-                    }
-                    db.close();
-                });
-            }
-        });
-    },
-    insertActivity: function (activity, functionCallback) {
-        this.mongo.MongoClient.connect(this.app.get('db'), function (err, db) {
-            if (err) {
-                functionCallback(null);
-            } else {
-                let collection = db.collection('actividades');
-                collection.insert(activity, function (err, result) {
-                    if (err) {
-                        functionCallback(null);
-                    } else {
-                        functionCallback(result.ops[0]._id);
-                    }
-                    db.close();
-                });
-            }
-        });
-    },
-    getInstructors: function (criteria, functionCallback) {
-        this.mongo.MongoClient.connect(this.app.get('db'), function (err, db) {
-            if (err) {
-                functionCallback(null);
-            } else {
-                let collection = db.collection('monitores');
-                collection.find(criteria).toArray(function (err, instructors) {
-                    if (err) {
-                        functionCallback(null);
-                    } else {
-                        functionCallback(instructors);
-                    }
-                    db.close();
-                });
-            }
-        });
-    },
-    getInstructor: function (id, functionCallback) {
-        this.mongo.MongoClient.connect(this.app.get('db'), function (err, db) {
-            if (err) {
-                functionCallback(null);
-            } else {
-                let collection = db.collection('monitores');
-                var criteria = { "_id": id }
-                collection.find(criteria).toArray(function (err, instructors) {
-                    if (err) {
-                        functionCallback(null);
-                    } else {
-                        functionCallback(instructors[0]);
-                    }
-                    db.close();
-                });
-            }
-        });
-    },
-    insertInstructor: function (instructor, functionCallback) {
-        this.mongo.MongoClient.connect(this.app.get('db'), function (err, db) {
-            if (err) {
-                functionCallback(null);
-            } else {
-                let collection = db.collection('monitores');
-                collection.insert(activity, function (err, result) {
+                let collection = db.collection(collectionName);
+                collection.insert(entity, function (err, result) {
                     if (err) {
                         functionCallback(null);
                     } else {
