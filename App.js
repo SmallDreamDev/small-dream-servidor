@@ -1,12 +1,15 @@
-let express = require('express');
-let bodyParser = require('body-parser');
+let express = require("express");
+let bodyParser = require("body-parser");
 let gestorBD = require("./src/modules/gestorBD.js");
-let mongo = require('mongodb');
+let mongo = require("mongodb");
 let validations = require("./src/modules/validations.js");
 let factory = require("./src/modules/factory.js");
 let crud = require("./src/modules/crud.js");
 
-//Inicializacion variables
+//Load environment variables
+require("dotenv").config()
+
+//Variables initialization
 let app = express();
 gestorBD.init(app, mongo);
 factory.init(validations);
@@ -19,7 +22,7 @@ app.use(bodyParser.json());
 
 //Sets
 app.set("port", 8080);
-app.set("db", "mongodb://sdadmin:5mAnammfatNoxO2J@smalldream-shard-00-00.ipxdb.mongodb.net:27017,smalldream-shard-00-01.ipxdb.mongodb.net:27017,smalldream-shard-00-02.ipxdb.mongodb.net:27017/smalldream?ssl=true&replicaSet=atlas-in3ped-shard-0&authSource=admin&retryWrites=true&w=majority");
+app.set("db", process.env.MONGODB_URI);
 
 //Routes
 // require("./src/routes/rClients.js")(app, crud);
