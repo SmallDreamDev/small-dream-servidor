@@ -17,7 +17,7 @@ module.exports = function (app, crud, collectionName) {
             if (entityList === null) {
                 res.status(500);
                 res.json({
-                    error: `No se han podido obtener las entidades solicitadas desde "${collectionName}"`
+                    error: `No se han podido obtener las entidades solicitadas desde ${collectionName}`
                 });
             } else {
                 res.status(200);
@@ -35,7 +35,7 @@ module.exports = function (app, crud, collectionName) {
                 if (entityData === null) {
                     res.status(500);
                     res.json({
-                        error: `No se han podido obtener los datos de la entidad solicitada desde "${collectionName}"`
+                        error: `No se han podido obtener los datos de la entidad solicitada desde ${collectionName}`
                     });
                 } else {
                     res.status(200);
@@ -52,7 +52,7 @@ module.exports = function (app, crud, collectionName) {
             if (entityId === null) {
                 res.status(500);
                 res.json({
-                    error: `No se ha podido crear la entidad proporcionada en "${collectionName}"`
+                    error: `No se ha podido crear la entidad proporcionada en ${collectionName}`
                 });
             } else {
                 res.status(201);
@@ -66,8 +66,18 @@ module.exports = function (app, crud, collectionName) {
     app.post(`/${collectionName}/actualizar/:id`, function (req, res) {
         let entityId = req.params.id;
         if (isIdValid(entityId, res)) {
-            crud.updateEntity(collectionName, entityId, req.body, function () {
-
+            crud.updateEntity(collectionName, entityId, req.body, function (result) {
+                if (result === null){
+                    res.status(500);
+                    res.json({
+                        error: `No se ha podido crear la entidad proporcionada en ${collectionName}`
+                    });
+                } else {
+                    res.status(200);
+                    res.json({
+                        result: result
+                    });
+                }
             });
         }
     });

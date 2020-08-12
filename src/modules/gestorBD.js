@@ -44,5 +44,22 @@ module.exports = {
                 });
             }
         });
+    },
+    updateEntity : function(collectionName, criteria, entity, functionCallback) {
+        this.mongo.MongoClient.connect(this.app.get('db'), function(err, db) {
+            if (err) {
+                functionCallback(null);
+            } else {
+                let collection = db.collection(collectionName);
+                collection.update(criteria, {$set: entity}, function(err, result) {
+                    if (err) {
+                        functionCallback(null);
+                    } else {
+                        functionCallback(result);
+                    }
+                    db.close();
+                });
+            }
+        });
     }
 }
