@@ -70,23 +70,33 @@ module.exports = function (app, crud, collectionName) {
                 if (result === null){
                     res.status(500);
                     res.json({
-                        error: `No se ha podido crear la entidad proporcionada en ${collectionName}`
+                        error: `No se ha podido modificar la entidad proporcionada en ${collectionName}`
                     });
                 } else {
                     res.status(200);
                     res.json({
-                        result: result
+                        result: "modificado"
                     });
                 }
             });
         }
     });
 
-    app.post(`/${collectionName}/eliminar/:id`, function (req, res) {
+    app.get(`/${collectionName}/eliminar/:id`, function (req, res) {
         let entityId = req.params.id;
         if (isIdValid(entityId, res)) {
-            crud.deleteEntity(collectionName, entityId, function () {
-
+            crud.deleteEntity(collectionName, entityId, function (result) {
+                if (result === null){
+                    res.status(500);
+                    res.json({
+                        error: `No se ha podido eliminar la entidad proporcionada en ${collectionName}`
+                    });
+                } else {
+                    res.status(200);
+                    res.json({
+                        result: "eliminado"
+                    });
+                }
             });
         }
     });

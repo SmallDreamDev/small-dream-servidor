@@ -61,5 +61,22 @@ module.exports = {
                 });
             }
         });
+    },
+    deleteEntity : function(collectionName, criteria, functionCallback) {
+        this.mongo.MongoClient.connect(this.app.get('db'), function(err, db) {
+            if (err) {
+                functionCallback(null);
+            } else {
+                let collection = db.collection(collectionName);
+                collection.remove(criteria, function(err, result) {
+                    if (err) {
+                        functionCallback(null);
+                    } else {
+                        functionCallback(result);
+                    }
+                    db.close();
+                });
+            }
+        });
     }
 }

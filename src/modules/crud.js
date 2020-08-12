@@ -46,5 +46,11 @@ module.exports = {
         this.gestorBD.updateEntity(collectionName, criteria, entity, function(result){
             callbackFunction(result);
         });
+    },
+    deleteEntity: function (collectionName, entityId, callbackFunction){
+        let criteria = { _id : this.gestorBD.mongo.ObjectID(entityId) };
+        this.gestorBD.deleteEntity(collectionName, criteria, function(result){
+            callbackFunction(result);
+        });
     }
 };
