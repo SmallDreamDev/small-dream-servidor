@@ -39,5 +39,18 @@ module.exports = {
             case "talleres": this.factory.createWorkshop(requestBody, callback); break;
             default: break;
         }
+    },
+    updateEntity: function (collectionName, entityId, requestBody, callbackFunction){
+        let entity = requestBody.entity;
+        let criteria = { _id : this.gestorBD.mongo.ObjectID(entityId) };
+        this.gestorBD.updateEntity(collectionName, criteria, entity, function(result){
+            callbackFunction(result);
+        });
+    },
+    deleteEntity: function (collectionName, entityId, callbackFunction){
+        let criteria = { _id : this.gestorBD.mongo.ObjectID(entityId) };
+        this.gestorBD.deleteEntity(collectionName, criteria, function(result){
+            callbackFunction(result);
+        });
     }
 };
