@@ -1,80 +1,112 @@
 module.exports = {
+    joi : null,
+    init : function(joi){
+        this.joi = joi;
+    },
     checkValidClient(clientToValidate, functionCallback){
-        let { nombre_completo, dni, contacto, fecha_nacimiento } = clientToValidate;
-
-        if(nombre_completo === undefined || nombre_completo === null || nombre_completo.trim().length == 0
-        || dni === undefined || dni === null || dni.trim().length == 0
-        || contacto === undefined || contacto === null || contacto.trim().length == 0
-        || fecha_nacimiento === undefined || fecha_nacimiento === null || fecha_nacimiento.trim().length == 0){
-            functionCallback(null);
-        }
-
-        functionCallback(clientToValidate);
+        const schema = this.joi.object({
+            nombre_completo : this.joi.string()
+                        .max(30)
+                        .required(),
+            dni : this.joi.string()
+                        .pattern(/(([x-z]|[X-Z]{1})([-]?)(\d{7})([-]?)([a-z]|[A-Z]{1}))|((\d{8})([-]?)([a-z]|[A-Z]{1}))/)
+                        .required(),
+            contacto : this.joi.string()
+                        .required(),
+            fecha_nacimiento : this.joi.date()
+                        .format("DD/MM/YYYY")
+                        .raw()
+                        .greater("1-1-1900")
+                        .less("now")
+                        .required()                 
+        });
+        let { error, value } = schema.validate(clientToValidate);
+        error ? functionCallback(null) : functionCallback(value);
     },
     checkValidActivity(activityToValidate, functionCallback){
-        let { nombre, zona } = activityToValidate;
-
-        if(nombre === undefined || nombre === null || nombre.trim().length == 0
-        || zona === undefined || zona === null || zona.trim().length == 0){
-            functionCallback(null);
-        }
-
-        functionCallback(activityToValidate);
+        const schema = this.joi.object({
+            nombre : this.joi.string()
+                        .max(50)
+                        .required(),
+            zona : this.joi.string()
+                        .pattern(/[a-zA-Z]/)
+                        .max(1)
+                        .required()
+        });
+        let { error, value } = schema.validate(activityToValidate);
+        error ? functionCallback(null) : functionCallback(value);
     },
     checkValidCategory(categoryToValidate, functionCallback){
-        let { nombre } = categoryToValidate;
+        const schema = this.joi.string()
+                        .max(50)
+                        .required();
 
-        if(nombre === undefined || nombre === null || nombre.trim().length == 0){
-            functionCallback(null);
-        }
-
-        functionCallback(categoryToValidate);
+        let { error, value } = schema.validate(categoryToValidate);
+        error ? functionCallback(null) : functionCallback(value);
     },
     checkValidInstructor(instructorToValidate, functionCallback){
-        let { nombre_completo, dni, contacto } = instructorToValidate;
+        const schema = this.joi.object({
+            nombre_completo : this.joi.string()
+                        .pattern(/^[a-z ,.'-]+$/i)
+                        .max(30)
+                        .required(),
+            dni : this.joi.string()
+                        .pattern(/(([x-z]|[X-Z]{1})([-]?)(\d{7})([-]?)([a-z]|[A-Z]{1}))|((\d{8})([-]?)([a-z]|[A-Z]{1}))/)
+                        .required(),
+            contacto : this.joi.string()
+                        .required()
+        });
 
-        if(nombre_completo === undefined || nombre_completo === null || nombre_completo.trim().length == 0
-        || dni === undefined || dni === null || dni.trim().length == 0
-        || contacto === undefined || contacto === null || contacto.trim().length == 0){
-            functionCallback(null);
-        }
-
-        functionCallback(instructorToValidate);
+        let { error, value } = schema.validate(instructorToValidate);
+        error ? functionCallback(null) : functionCallback(value);
     },
     checkValidMaterial(materialToValidate, functionCallback){
-        let { precio, descripcion } = materialToValidate;
+        const schema = this.joi.object({
+            precio : this.joi.number()
+                        .min(0)
+                        .required(),
+            descripcion : this.joi.string()
+                        .max(30)
+                        .required()
+        });
 
-        if(precio === undefined || precio === null || precio.trim().length == 0
-        || descripcion === undefined || descripcion === null || descripcion.trim().length == 0){
-            functionCallback(null);
-        }
-
-        functionCallback(materialToValidate);
+        let { error, value } = schema.validate(materialToValidate);
+        error ? functionCallback(null) : functionCallback(value);
     },
     checkValidSchedule(scheduleToValidate, functionCallback){
-        let { hora_inicio, hora_fin, id_actividad, id_monitor, fecha } = scheduleToValidate;
+        const schema = this.joi.object({
+            hora_inicio : this.joi.string()
+                        .pattern(/^(([0-1]{1}[0-9]{1})|([2]{1}[0-3]{1})):(([0-5]{1}[0-9]{1}))$/)
+                        .required(),
+            hora_fin : this.joi.string()
+                        .pattern(/^(([0-1]{1}[0-9]{1})|([2]{1}[0-3]{1})):(([0-5]{1}[0-9]{1}))$/)
+                        .required(),
+            id_actividad: this.joi.string(),
+            id_monitor: this.joi.string(),
+            fecha : this.joi.date()
+                        .format("DD/MM/YYYY")
+                        .raw()
+                        .greater("now")
+                        .required()   
+        });
 
-        if(hora_inicio === undefined || hora_inicio === null || hora_inicio.trim().length == 0
-        || hora_fin === undefined || hora_fin === null || hora_fin.trim().length == 0
-        || id_actividad === undefined || id_actividad === null || id_actividad.trim().length == 0
-        || id_monitor === undefined || id_monitor === null || id_monitor.trim().length == 0
-        || fecha === undefined || fecha === null || fecha.trim().length == 0){
-            functionCallback(null);
-        }
-
-        functionCallback(scheduleToValidate);
+        let { error, value } = schema.validate(scheduleToValidate);
+        console.log(error);
+        error ? functionCallback(null) : functionCallback(value);
     },
     checkValidWorkshop(workshopToValidate, functionCallback){
-        let { id_monitor, id_actividad, fecha, plazas, id_modo_pago } = workshopToValidate;
+        const schema = this.joi.object({
+            fecha : this.joi.date()
+                        .format("DD/MM/YYYY")
+                        .raw()
+                        .greater("now")
+                        .required(),
+            plazas : this.joi.number()
+                        .min(1)
+                        .required()
+        });
 
-        if(id_monitor === undefined || id_monitor === null || id_monitor.trim().length == 0
-        || id_actividad === undefined || id_actividad === null || id_actividad.trim().length == 0
-        || fecha === undefined || fecha === null || fecha.trim().length == 0
-        || plazas === undefined || plazas === null || plazas.trim().length == 0
-        || id_modo_pago === undefined || id_modo_pago === null || id_modo_pago.trim().length == 0){
-            functionCallback(null);
-        }
-
-        functionCallback(workshopToValidate);
+        let { error, value } = schema.validate(workshopToValidate);
+        error ? functionCallback(null) : functionCallback(value);
     }
 }

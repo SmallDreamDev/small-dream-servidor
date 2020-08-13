@@ -5,6 +5,8 @@ let mongo = require("mongodb");
 let validations = require("./src/modules/validations.js");
 let factory = require("./src/modules/factory.js");
 let crud = require("./src/modules/crud.js");
+let joi = require("joi")
+    .extend(require("@hapi/joi-date"));
 
 //Load environment variables
 require("dotenv").config();
@@ -14,6 +16,7 @@ let app = express();
 gestorBD.init(app, mongo);
 factory.init(validations);
 crud.init(gestorBD, factory);
+validations.init(joi);
 
 //Uses
 app.use(bodyParser.json());
