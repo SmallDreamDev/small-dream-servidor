@@ -2,9 +2,9 @@ let express = require("express");
 let bodyParser = require("body-parser");
 let gestorBD = require("./src/modules/gestorBD.js");
 let mongo = require("mongodb");
-let validations = require("./src/modules/validations.js");
 let factory = require("./src/modules/factory.js");
 let crud = require("./src/modules/crud.js");
+let schemas = require("./src/modules/schemas.js");
 let joi = require("joi")
     .extend(require("@hapi/joi-date"));
 
@@ -14,9 +14,9 @@ require("dotenv").config();
 //Variables initialization
 let app = express();
 gestorBD.init(app, mongo);
-factory.init(validations);
+schemas.init(joi);
+factory.init(schemas);
 crud.init(gestorBD, factory);
-validations.init(joi);
 
 //Uses
 app.use(bodyParser.json());
