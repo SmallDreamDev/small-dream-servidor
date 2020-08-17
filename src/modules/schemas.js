@@ -1,67 +1,69 @@
-let stringSubschema = this.joi.string()
+let joi = require("joi").extend(require("@hapi/joi-date"));
+
+let stringSubschema = joi.string()
     .max(100)
     .required();
-let dniSubschema = this.joi.string()
+let dniSubschema = joi.string()
     .pattern(/(([x-z]|[X-Z]{1})([-]?)(\d{7})([-]?)([a-z]|[A-Z]{1}))|((\d{8})([-]?)([a-z]|[A-Z]{1}))/)
     .required();
-let activityDate = this.joi.date()
+let activityDate = joi.date()
     .format("DD/MM/YYYY")
     .raw()
     .greater("1-1-1900")
     .less("now")
     .required();
-let timeSchema = this.joi.string()
+let timeSchema = joi.string()
     .pattern(/^(([0-1]{1}[0-9]{1})|([2]{1}[0-3]{1})):(([0-5]{1}[0-9]{1}))$/)
     .required();
 
 module.exports = {
-    joi: null,
-    init: function (joi) {
-        this.joi = joi;
-    },
-    clientSchema: this.joi.object({
+    clientSchema: joi.object({
         nombre_completo: stringSubschema,
         dni: dniSubschema,
         contacto: stringSubschema,
-        fecha_nacimiento: this.joi.date()
+        fecha_nacimiento: joi.date()
             .format("DD/MM/YYYY")
             .raw()
             .greater("1-1-1900")
             .less("now")
             .required()
     }),
-    activitySchema: this.joi.object({
+    activitySchema: joi.object({
         nombre: stringSubschema,
-        zona: this.joi.string()
+        zona: joi.string()
             .pattern(/[a-zA-Z]/)
             .max(1)
             .required()
     }),
-    categorySchema: this.joi.object({
+    categorySchema: joi.object({
         nombre: stringSubschema
     }),
-    instructorSchema: this.joi.object({
+    instructorSchema: joi.object({
         nombre_completo: stringSubschema,
         dni: dniSubschema,
         contacto: stringSubschema
     }),
-    materialSchema: this.joi.object({
-        precio: this.joi.number()
+    materialSchema: joi.object({
+        precio: joi.number()
             .min(0)
             .required(),
         descripcion: stringSubschema
     }),
-    scheduleSchema: this.joi.object({
+    scheduleSchema: joi.object({
         hora_inicio: timeSchema,
         hora_fin: timeSchema,
-        id_actividad: this.joi.string(),
-        id_monitor: this.joi.string(),
+        id_actividad: joi.string(),
+        id_monitor: joi.string(),
         fecha: activityDate
     }),
-    workshopSchema: this.joi.object({
+    workshopSchema: joi.object({
         fecha: activityDate,
-        plazas: this.joi.number()
+        plazas: joi.number()
             .min(1)
             .required()
+    }),
+    userLoginSchema: joi.object({
+        nombre_usuario: stringSubschema,
+        clave: stringSubschema
     })
 };

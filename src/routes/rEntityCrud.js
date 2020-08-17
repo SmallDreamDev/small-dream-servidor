@@ -9,7 +9,7 @@ function isIdValid(id, res) {
     return id && true;
 }
 
-function responseFunction (response, result, errorStatusCode, errorMessage, successStatusCode, successJson){
+function responseFunction(response, result, errorStatusCode, errorMessage, successStatusCode, successJson) {
     if (result === null) {
         response.status(errorStatusCode);
         response.json({
@@ -34,14 +34,14 @@ module.exports = function (app, crud, collectionName) {
         let entityId = req.params.id;
         if (isIdValid(entityId, res)) {
             crud.getInstance(collectionName, entityId, function (entityData) {
-                responseFunction(res, entityData, 500, `No se han podido obtener los datos de la entidad solicitada desde ${collectionName}`, 200, { entityData : entityData });
+                responseFunction(res, entityData, 500, `No se han podido obtener los datos de la entidad solicitada desde ${collectionName}`, 200, { entityData: entityData });
             });
         }
     });
 
     app.post(`/${collectionName}/crear`, function (req, res) {
         crud.createEntity(collectionName, req.body, function (entityId) {
-            responseFunction(res, entityId, 500, `No se ha podido crear la entidad proporcionada en ${collectionName}`, 201, { entityId : entityId });
+            responseFunction(res, entityId, 500, `No se ha podido crear la entidad proporcionada en ${collectionName}`, 201, { entityId: entityId });
         });
     });
 
@@ -49,7 +49,7 @@ module.exports = function (app, crud, collectionName) {
         let entityId = req.params.id;
         if (isIdValid(entityId, res)) {
             crud.updateEntity(collectionName, entityId, req.body, function (result) {
-                responseFunction(res, result, 500, `No se ha podido modificar la entidad proporcionada en ${collectionName}`, 200, { message : "modificado" });
+                responseFunction(res, result, 500, `No se ha podido modificar la entidad proporcionada en ${collectionName}`, 200, { message: "modificado" });
             });
         }
     });
@@ -58,7 +58,7 @@ module.exports = function (app, crud, collectionName) {
         let entityId = req.params.id;
         if (isIdValid(entityId, res)) {
             crud.deleteEntity(collectionName, entityId, function (result) {
-                responseFunction(res, result, 500, `No se ha podido eliminar la entidad proporcionada en ${collectionName}`, 200, { message : "eliminado" });
+                responseFunction(res, result, 500, `No se ha podido eliminar la entidad proporcionada en ${collectionName}`, 200, { message: "eliminado" });
             });
         }
     });
