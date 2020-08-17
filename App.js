@@ -6,7 +6,7 @@ let express = require("express");
 let bodyParser = require("body-parser");
 let mongo = require("mongodb");
 let jwt = require("jsonwebtoken");
-let crypto = require('crypto');
+let crypto = require("crypto");
 
 // Load environment variables
 require("dotenv").config();
@@ -25,7 +25,7 @@ app.use(bodyParser.json());
 let routerUserToken = express.Router();
 routerUserToken.use(function (req, res, next) {
     let token = req.headers["token"] || req.body.token || req.query.token;
-    if (token != null) {
+    if (token !== null) {
         jwt.verify(token, app.get("token_secret"), function (err, infoToken) {
             if (err || (Date.now() / 1000 - infoToken.time) > 240) {
                 res.status(403);
