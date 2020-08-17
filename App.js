@@ -65,7 +65,6 @@ require("./src/routes/rEntityCrud.js")(app, crud, "materiales");
 require("./src/routes/rEntityCrud.js")(app, crud, "programas");
 require("./src/routes/rEntityCrud.js")(app, crud, "horarios");
 require("./src/routes/rEntityCrud.js")(app, crud, "talleres");
-require("./src/routes/rEntityCrud.js")(app, crud, "cosas");
 // -- User management
 require("./src/routes/rUserLogin.js")(app, gestorBD, schemas);
 
