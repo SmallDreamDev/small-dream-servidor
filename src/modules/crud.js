@@ -18,11 +18,12 @@ module.exports = {
         });
     },
     createEntity: function (collectionName, requestBody, callbackFunction) {
+        let _gestorBD = this.gestorBD;
         let callback = function (newEntity) {
             if (newEntity === null) {
                 callbackFunction(null);
             } else {
-                this.gestorBD.insertEntity(collectionName, newEntity, function (id) {
+                _gestorBD.insertEntity(collectionName, newEntity, function (id) {
                     callbackFunction(id);
                 });
             }
@@ -34,11 +35,22 @@ module.exports = {
             case "clientes": this.factory.createClient(requestBody, callback); break;
             case "monitores": this.factory.createInstructor(requestBody, callback); break;
             case "materiales": this.factory.createMaterial(requestBody, callback); break;
-            case "programas": this.factory.createProgram(requestBody, callback); break;
             case "horarios": this.factory.createSchedule(requestBody, callback); break;
-            case "usuarios": this.factory.createUser(requestBody, callback); break;
             case "talleres": this.factory.createWorkshop(requestBody, callback); break;
             default: break;
         }
+    },
+    updateEntity: function (collectionName, entityId, requestBody, callbackFunction){
+        let entity = requestBody.entity;
+        let criteria = { _id : this.gestorBD.mongo.ObjectID(entityId) };
+        this.gestorBD.updateEntity(collectionName, criteria, entity, function(result){
+            callbackFunction(result);
+        });
+    },
+    deleteEntity: function (collectionName, entityId, callbackFunction){
+        let criteria = { _id : this.gestorBD.mongo.ObjectID(entityId) };
+        this.gestorBD.deleteEntity(collectionName, criteria, function(result){
+            callbackFunction(result);
+        });
     }
 };

@@ -1,78 +1,69 @@
+function validate(entityToValidate, schema, functionCallback){
+    let { error, value } = schema.validate(entityToValidate);
+    error ? functionCallback(null) : functionCallback(value);
+}
+
 module.exports = {
-    validations: null,
-    init: function (validations) {
-        this.validations = validations;
+    schemas: null,
+    init: function (schemas) {
+        this.schemas = schemas;
     },
-    createClient(requestBody, functionCallback) {
+    createClient: function (requestBody, functionCallback) {
         let clientToValidate = {
             nombre_completo: requestBody.nombre_completo,
             dni: requestBody.dni,
             contacto: requestBody.contacto,
             fecha_nacimiento: requestBody.fecha_nacimiento,
-        }
-        this.validations.checkValidClient(clientToValidate, function (client) {
-            functionCallback(client);
-        });
+        };
+        validate(clientToValidate, this.schemas.clientSchema, functionCallback);
     },
-    createActivity(requestBody, functionCallback) {
+    createActivity: function (requestBody, functionCallback) {
         let activityToValidate = {
             nombre: requestBody.nombre,
             zona: requestBody.zona
-        }
-        this.validations.checkValidActivity(activityToValidate, function (activity) {
-            functionCallback(activity);
-        });
+        };
+        validate(activityToValidate, this.schemas.activitySchema, functionCallback);
     },
-    createCategory(requestBody, functionCallback) {
+    createCategory: function (requestBody, functionCallback) {
         let categoryToValidate = {
             nombre: requestBody.nombre,
             zona: requestBody.zona
-        }
-        this.validations.checkValidCategory(categoryToValidate, function (category) {
-            functionCallback(category);
-        });
+        };
+        validate(categoryToValidate, this.schemas.categorySchema, functionCallback);
     },
-    createInstructor(requestBody, functionCallback) {
+    createInstructor: function (requestBody, functionCallback) {
         let instructorToValidate = {
             nombre_completo: requestBody.nombre_completo,
             dni: requestBody.dni,
             contacto: requestBody.contacto
-        }
-        this.validations.checkValidInstructor(instructorToValidate, function (instructor) {
-            functionCallback(instructor);
-        });
+        };
+        validate(instructorToValidate, this.schemas.instructorSchema, functionCallback);
     },
-    createMaterial(requestBody, functionCallback) {
+    createMaterial: function (requestBody, functionCallback) {
         let materialToValidate = {
             precio: requestBody.precio,
             descripcion: requestBody.descripcion
-        }
-        this.validations.checkValidMaterial(materialToValidate, function (material) {
-            functionCallback(material);
-        });
+        };
+        validate(materialToValidate, this.schemas.materialSchema, functionCallback);
     },
-    createSchedule(requestBody, functionCallback) {
+    createSchedule: function (requestBody, functionCallback) {
         let scheduleToValidate = {
             hora_inicio: requestBody.hora_inicio,
             hora_fin: requestBody.hora_fin,
             id_actividad: requestBody.id_actividad,
             id_monitor: requestBody.id_monitor,
             fecha: requestBody.fecha
-        }
-        this.validations.checkValidSchedule(scheduleToValidate, function (schedule) {
-            functionCallback(schedule);
-        });
+        };
+        validate(scheduleToValidate, this.schemas.scheduleSchema, functionCallback);
     },
-    createWorkshop(requestBody, functionCallback) {
+    createWorkshop: function (requestBody, functionCallback) {
         let workshopToValidate = {
             id_monitor: requestBody.id_monitor,
             id_actividad: requestBody.id_actividad,
             fecha: requestBody.fecha,
             plazas: requestBody.plazas,
             id_modo_pago: requestBody.id_modo_pago
-        }
-        this.validations.checkValidWorkshop(workshopToValidate, function (workshop) {
-            functionCallback(workshop);
-        });
+        };
+        validate(workshopToValidate, this.schemas.workshopSchema, functionCallback);
     }
 };
