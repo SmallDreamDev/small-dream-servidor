@@ -14,11 +14,11 @@ module.exports = function (app, gestorBD, schemas) {
         if (error) {
             resolveRequestError("Esa combinación de usuario y contraseña no es correcta", res, 401);
         } else {
-            let cyphered_password = app.get("crypto").createHmac("sha256", app.get("secret_key"))
+            let cypheredPassword = app.get("crypto").createHmac("sha256", app.get("secret_key"))
                 .update(value.clave).digest("hex");
             let criteria = {
                 "nombre_usuario": value.nombre_usuario,
-                "clave": cyphered_password
+                "clave": cypheredPassword
             };
             gestorBD.getEntityCollection(criteria, function (users) {
                 if (users === null) {
