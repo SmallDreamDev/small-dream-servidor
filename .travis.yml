@@ -12,6 +12,7 @@ before_script:
 script:
   - npm install -g codecov
   - codecov
+  - npm run build
 deploy:
   provider: pages
   skip_cleanup: true
