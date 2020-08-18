@@ -43,7 +43,6 @@ module.exports = function (app, gestorBD, schemas) {
     });
 
     app.get("/usuario/salir", function (req, res) {
-        // TODO
     });
 
 };
