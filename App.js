@@ -17,6 +17,15 @@ gestorBD.init(app, mongo);
 factory.init(schemas);
 crud.init(gestorBD, factory);
 
+app.use(function(req, res, next) {
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Credentials", "true");
+    res.header("Access-Control-Allow-Methods", "POST, GET, DELETE, UPDATE, PUT, PATCH");
+    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, token");
+    // Debemos especificar todas las headers que se aceptan. Content-Type , token
+    next();
+ });
+
 // Uses
 app.use(bodyParser.json());
 
@@ -67,6 +76,7 @@ require("./src/routes/rEntityCrud.js")(app, crud, "horarios");
 require("./src/routes/rEntityCrud.js")(app, crud, "talleres");
 // -- User management
 require("./src/routes/rUserLogin.js")(app, gestorBD, schemas);
+require("./src/routes/rUserSignup.js")(app, gestorBD);
 
 // Apply routers to API endpoints
 app.use("/actividades", routerUserToken);
