@@ -20,7 +20,7 @@ module.exports = function (app, gestorBD, schemas) {
                 "nombre_usuario": value.nombre_usuario,
                 "clave": cypheredPassword
             };
-            gestorBD.getEntityCollection(criteria, function (users) {
+            gestorBD.getEntityCollection("usuarios", criteria, function (users) {
                 if (users === null) {
                     resolveRequestError("Ha habido un error al intentar iniciar sesión", res, 500);
                 } else {

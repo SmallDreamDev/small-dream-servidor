@@ -37,6 +37,9 @@ module.exports = {
             case "materiales": this.factory.createMaterial(requestBody, callback); break;
             case "horarios": this.factory.createSchedule(requestBody, callback); break;
             case "talleres": this.factory.createWorkshop(requestBody, callback); break;
+            case "usuarios": this.gestorBD.insertEntity(requestBody, function(id){
+                callbackFunction(id);
+            })
             default: break;
         }
     },
