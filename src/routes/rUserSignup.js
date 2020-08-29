@@ -10,7 +10,10 @@ module.exports = function (app, gestorBD) {
         };
         gestorBD.insertEntity("usuarios", user, function (id) {
             if (id === null) {
-                resolveRequestError("Ha habido un error al registrarse", res, 500);
+                res.status(500);
+                res.json({
+                    errorMsg : "Ha habido un error al registrarse"
+                });
             } else {
                 let token = app.get("jwt").sign({
                     user: user.nombre_usuario,

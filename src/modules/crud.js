@@ -39,7 +39,7 @@ module.exports = {
             case "talleres": this.factory.createWorkshop(requestBody, callback); break;
             case "usuarios": this.gestorBD.insertEntity(requestBody, function(id){
                 callbackFunction(id);
-            })
+            });
             default: break;
         }
     },
