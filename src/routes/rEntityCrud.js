@@ -32,7 +32,7 @@ module.exports = function (app, crud, collectionName) {
                 500,
                 `No se han podido obtener las entidades solicitadas desde ${collectionName}`,
                 200,
-                { entityList: entityList }
+                { entityList }
             );
         });
     });
@@ -45,7 +45,7 @@ module.exports = function (app, crud, collectionName) {
                 500,
                 `No se ha podido crear la entidad proporcionada en ${collectionName}`,
                 201,
-                { entityId: entityId }
+                { entityId }
             );
         });
     });
@@ -92,7 +92,7 @@ module.exports = function (app, crud, collectionName) {
                     500,
                     `No se han podido obtener los datos de la entidad solicitada desde ${collectionName}`,
                     200,
-                    { entityData: entityData }
+                    { entityData }
                 );
             });
         }

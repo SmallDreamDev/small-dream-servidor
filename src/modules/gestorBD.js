@@ -52,11 +52,7 @@ module.exports = {
             } else {
                 let collection = db.collection(collectionName);
                 collection.update(criteria, { $set: entity }, function (err, result) {
-                    if (err) {
-                        functionCallback(null);
-                    } else {
-                        functionCallback(result);
-                    }
+                    functionCallback(err ? null : result);
                     db.close();
                 });
             }
@@ -69,11 +65,7 @@ module.exports = {
             } else {
                 let collection = db.collection(collectionName);
                 collection.remove(criteria, function (err, result) {
-                    if (err) {
-                        functionCallback(null);
-                    } else {
-                        functionCallback(result);
-                    }
+                    functionCallback(err ? null : result);
                     db.close();
                 });
             }
