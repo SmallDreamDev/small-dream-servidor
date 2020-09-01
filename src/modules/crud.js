@@ -1,5 +1,3 @@
-const { call } = require("body-parser");
-
 module.exports = {
     gestorBD: null,
     factory: null,
@@ -35,24 +33,27 @@ module.exports = {
             case "clientes": this.factory.createClient(requestBody, callback); break;
             case "monitores": this.factory.createInstructor(requestBody, callback); break;
             case "materiales": this.factory.createMaterial(requestBody, callback); break;
-            case "horarios": this.factory.createSchedule(requestBody, callback); break;
             case "talleres": this.factory.createWorkshop(requestBody, callback); break;
-            case "usuarios": this.gestorBD.insertEntity(requestBody, function(id){
+            case "modosDePago": this.factory.createPaymentMethod(requestBody, callback); break;
+            case "perteneceA": this.factory.createRelationshipActivityCategory(requestBody, callback); break;
+            case "usa": this.factory.createRelationshipActivityMaterial(requestBody, callback); break;
+            case "apuntado": this.factory.createRelationshipClientToWorkshop(requestBody, callback); break;
+            case "usuarios": this.gestorBD.insertEntity(requestBody, function (id) {
                 callbackFunction(id);
             });
             default: break;
         }
     },
-    updateEntity: function (collectionName, entityId, requestBody, callbackFunction){
+    updateEntity: function (collectionName, entityId, requestBody, callbackFunction) {
         let entity = requestBody.entity;
-        let criteria = { _id : this.gestorBD.mongo.ObjectID(entityId) };
-        this.gestorBD.updateEntity(collectionName, criteria, entity, function(result){
+        let criteria = { _id: this.gestorBD.mongo.ObjectID(entityId) };
+        this.gestorBD.updateEntity(collectionName, criteria, entity, function (result) {
             callbackFunction(result);
         });
     },
-    deleteEntity: function (collectionName, entityId, callbackFunction){
-        let criteria = { _id : this.gestorBD.mongo.ObjectID(entityId) };
-        this.gestorBD.deleteEntity(collectionName, criteria, function(result){
+    deleteEntity: function (collectionName, entityId, callbackFunction) {
+        let criteria = { _id: this.gestorBD.mongo.ObjectID(entityId) };
+        this.gestorBD.deleteEntity(collectionName, criteria, function (result) {
             callbackFunction(result);
         });
     }

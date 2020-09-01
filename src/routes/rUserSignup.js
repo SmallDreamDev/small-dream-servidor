@@ -12,7 +12,7 @@ module.exports = function (app, gestorBD) {
             if (id === null) {
                 res.status(500);
                 res.json({
-                    errorMsg : "Ha habido un error al registrarse"
+                    errorMsg: "Ha habido un error al registrarse"
                 });
             } else {
                 let token = app.get("jwt").sign({
@@ -27,7 +27,6 @@ module.exports = function (app, gestorBD) {
                 });
             }
         });
-        
     });
 
 };
