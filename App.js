@@ -17,14 +17,13 @@ gestorBD.init(app, mongo);
 factory.init(schemas);
 crud.init(gestorBD, factory);
 
-app.use(function(req, res, next) {
+app.use(function (req, res, next) {
     res.header("Access-Control-Allow-Origin", "*");
     res.header("Access-Control-Allow-Credentials", "true");
-    res.header("Access-Control-Allow-Methods", "POST, GET, DELETE, UPDATE, PUT, PATCH");
+    res.header("Access-Control-Allow-Methods", "GET, POST");
     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, token");
-    // Debemos especificar todas las headers que se aceptan. Content-Type , token
     next();
- });
+});
 
 // Uses
 app.use(bodyParser.json());
@@ -71,9 +70,12 @@ require("./src/routes/rEntityCrud.js")(app, crud, "categorias");
 require("./src/routes/rEntityCrud.js")(app, crud, "clientes");
 require("./src/routes/rEntityCrud.js")(app, crud, "monitores");
 require("./src/routes/rEntityCrud.js")(app, crud, "materiales");
-require("./src/routes/rEntityCrud.js")(app, crud, "programas");
-require("./src/routes/rEntityCrud.js")(app, crud, "horarios");
 require("./src/routes/rEntityCrud.js")(app, crud, "talleres");
+require("./src/routes/rEntityCrud.js")(app, crud, "modosDePago");
+require("./src/routes/rEntityCrud.js")(app, crud, "perteneceA");
+require("./src/routes/rEntityCrud.js")(app, crud, "usa");
+require("./src/routes/rEntityCrud.js")(app, crud, "apuntado");
+
 // -- User management
 require("./src/routes/rUserLogin.js")(app, gestorBD, schemas);
 require("./src/routes/rUserSignup.js")(app, gestorBD);
@@ -84,9 +86,11 @@ app.use("/categorias", routerUserToken);
 app.use("/clientes", routerUserToken);
 app.use("/monitores", routerUserToken);
 app.use("/materiales", routerUserToken);
-app.use("/programas", routerUserToken);
-app.use("/horarios", routerUserToken);
 app.use("/talleres", routerUserToken);
+app.use("/modosDePago", routerUserToken);
+app.use("/perteneceA", routerUserToken);
+app.use("/usa", routerUserToken);
+app.use("/apuntado", routerUserToken);
 app.use("/usuario/salir", routerUserToken);
 
 // Listeners

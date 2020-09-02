@@ -45,38 +45,30 @@ module.exports = {
             }
         });
     },
-    updateEntity : function(collectionName, criteria, entity, functionCallback) {
-        this.mongo.MongoClient.connect(this.app.get('db'), function(err, db) {
+    updateEntity: function (collectionName, criteria, entity, functionCallback) {
+        this.mongo.MongoClient.connect(this.app.get('db'), function (err, db) {
             if (err) {
                 functionCallback(null);
             } else {
                 let collection = db.collection(collectionName);
-                collection.update(criteria, {$set: entity}, function(err, result) {
-                    if (err) {
-                        functionCallback(null);
-                    } else {
-                        functionCallback(result);
-                    }
+                collection.update(criteria, { $set: entity }, function (err, result) {
+                    functionCallback(err ? null : result);
                     db.close();
                 });
             }
         });
     },
-    deleteEntity : function(collectionName, criteria, functionCallback) {
-        this.mongo.MongoClient.connect(this.app.get('db'), function(err, db) {
+    deleteEntity: function (collectionName, criteria, functionCallback) {
+        this.mongo.MongoClient.connect(this.app.get('db'), function (err, db) {
             if (err) {
                 functionCallback(null);
             } else {
                 let collection = db.collection(collectionName);
-                collection.remove(criteria, function(err, result) {
-                    if (err) {
-                        functionCallback(null);
-                    } else {
-                        functionCallback(result);
-                    }
+                collection.remove(criteria, function (err, result) {
+                    functionCallback(err ? null : result);
                     db.close();
                 });
             }
         });
     }
-}
+};
