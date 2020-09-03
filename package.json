@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "test",
-    "build": "node App.js"
+    "build": ""
   },
   "author": "",
   "license": "ISC",
