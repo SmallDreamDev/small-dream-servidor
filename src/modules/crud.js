@@ -11,6 +11,7 @@ module.exports = {
         });
     },
     getInstance: function (collectionName, id, callbackFunction) {
+        id = this.gestorBD.mongo.ObjectID(id);
         this.gestorBD.getEntityById(collectionName, id, function (instance) {
             callbackFunction(instance);
         });
@@ -22,7 +23,7 @@ module.exports = {
                 callbackFunction(null);
             } else {
                 _gestorBD.insertEntity(collectionName, newEntity, function (id) {
-                    callbackFunction(id);
+                    callbackFunction(id.str);
                 });
             }
         };
@@ -39,7 +40,7 @@ module.exports = {
             case "usa": this.factory.createRelationshipActivityMaterial(requestBody, callback); break;
             case "apuntado": this.factory.createRelationshipClientToWorkshop(requestBody, callback); break;
             case "usuarios": this.gestorBD.insertEntity(requestBody, function (id) {
-                callbackFunction(id);
+                callbackFunction(id.str);
             });
             default: break;
         }
