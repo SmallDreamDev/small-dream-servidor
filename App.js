@@ -7,6 +7,7 @@ let bodyParser = require("body-parser");
 let mongo = require("mongodb");
 let jwt = require("jsonwebtoken");
 let crypto = require("crypto");
+let cors = require("cors");
 
 // Load environment variables
 require("dotenv").config();
@@ -24,6 +25,8 @@ app.use(function (req, res, next) {
     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, token");
     next();
 });
+
+app.use(cors());
 
 // Uses
 app.use(bodyParser.json());
