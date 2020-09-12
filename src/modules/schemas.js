@@ -1,23 +1,21 @@
 let joi = require("joi").extend(require("@hapi/joi-date"));
 
 let stringSubschema = joi.string()
-    .max(100)
-    .required();
+    .max(100);
 let dniSubschema = joi.string()
     .pattern(/(([x-z]|[X-Z]{1})([-]?)(\d{7})([-]?)([a-z]|[A-Z]{1}))|((\d{8})([-]?)([a-z]|[A-Z]{1}))/)
-    .required();
+    .message("No es un DNI válido");
 let dateSubschema = joi.date()
     .format("DD/MM/YYYY")
     .raw()
     .greater("1-1-1900")
     .less("now")
-    .required();
+    .message("No es una fecha correcta");
 let timeSubschema = joi.string()
     .pattern(/^(([0-1]{1}[0-9]{1})|([2]{1}[0-3]{1})):(([0-5]{1}[0-9]{1}))$/)
-    .required();
+    .message("No es una hora válida");
 let numberSubschema = joi.number()
-    .min(0)
-    .required();
+    .min(0);
 
 module.exports = {
     activitySchema: joi.object({
@@ -25,25 +23,25 @@ module.exports = {
         zona: joi.string()
             .pattern(/[a-zA-Z]/)
             .max(1)
-            .required()
+            .message("La zona debe ser una letra")
     }),
     categorySchema: joi.object({
-        nombre: stringSubschema
+        nombre: stringSubschema.message("No es un nombre válido para la actividad")
     }),
     clientSchema: joi.object({
-        nombre_completo: stringSubschema,
+        nombre_completo: stringSubschema.message("No es un nombre válido"),
         dni: dniSubschema,
-        contacto: stringSubschema,
+        contacto: stringSubschema.message("No es un contacto válido"),
         fecha_nacimiento: dateSubschema
     }),
     instructorSchema: joi.object({
-        nombre_completo: stringSubschema,
+        nombre_completo: stringSubschema.message("No es un nombre válido para el monitor"),
         dni: dniSubschema,
-        contacto: stringSubschema
+        contacto: stringSubschema.message("No es un contacto válido")
     }),
     materialSchema: joi.object({
-        precio: numberSubschema,
-        descripcion: stringSubschema
+        precio: numberSubschema.message("El precio no puede ser inferior a 0"),
+        descripcion: stringSubschema.message("No es una descripción válida")
     }),
     workshopSchema: joi.object({
         id_modo_pago: stringSubschema,
@@ -52,7 +50,7 @@ module.exports = {
         fecha: dateSubschema,
         hora_inicio: timeSubschema,
         hora_fin: timeSubschema,
-        plazas: numberSubschema
+        plazas: numberSubschema.message("El número de plazas no puede ser inferior a 0")
     }),
     userLoginSchema: joi.object({
         nombre_usuario: stringSubschema,

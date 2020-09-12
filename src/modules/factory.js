@@ -1,6 +1,6 @@
 function validate(entityToValidate, schema, functionCallback) {
-    let { error, value } = schema.validate(entityToValidate);
-    error ? functionCallback(null) : functionCallback(value);
+    let { error } = schema.validate(entityToValidate);
+    functionCallback(error);
 }
 
 module.exports = {
@@ -90,5 +90,23 @@ module.exports = {
             fecha: requestBody.fecha
         };
         validate(clientToWorkshop, this.schemas.clientToWorkshopSchema, functionCallback);
+    },
+    updateActivity(activity, functionCallback) {
+        validate(activity, this.schemas.activitySchema, functionCallback);
+    },
+    updateCategory(category, functionCallback) {
+        validate(category, this.schemas.categorySchema, functionCallback);
+    },
+    updateClient(client, functionCallback) {
+        validate(client, this.schemas.clientSchema, functionCallback);
+    },
+    updateInstructor(instructor, functionCallback) {
+        validate(instructor, this.schemas.instructorSchema, functionCallback);
+    },
+    updateMaterial(material, functionCallback) {
+        validate(material, this.schemas.materialSchema, functionCallback);
+    },
+    updateWorkshop(workshop, functionCallback) {
+        validate(workshop, this.schemas.workshopSchema, functionCallback);
     }
 };
