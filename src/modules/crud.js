@@ -48,9 +48,25 @@ module.exports = {
     updateEntity: function (collectionName, entityId, requestBody, callbackFunction) {
         let entity = requestBody.entity;
         let criteria = { _id: this.gestorBD.mongo.ObjectID(entityId) };
-        this.gestorBD.updateEntity(collectionName, criteria, entity, function (result) {
-            callbackFunction(result);
-        });
+        let _gestorBD = this.gestorBD;
+        let callback = function (error) {
+            if (error) {
+                callbackFunction(null, error);
+            } else {
+                _gestorBD.updateEntity(collectionName, criteria, entity, function (result) {
+                    callbackFunction(result, error);
+                });
+            }
+        };
+        switch (collectionName) {
+            case "actividades": this.factory.updateActivity(entity, callback); break;
+            case "categorias": this.factory.updateCategory(entity, callback); break;
+            case "clientes": this.factory.updateClient(entity, callback); break;
+            case "monitores": this.factory.updateInstructor(entity, callback); break;
+            case "materiales": this.factory.updateMaterial(entity, callback); break;
+            case "talleres": this.factory.updateWorkshop(entity, callback); break;
+            default: break;
+        }
     },
     deleteEntity: function (collectionName, entityId, callbackFunction) {
         let criteria = { _id: this.gestorBD.mongo.ObjectID(entityId) };

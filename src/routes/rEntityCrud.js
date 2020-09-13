@@ -21,6 +21,17 @@ function responseFunction(response, result, errorStatusCode, errorMessage, succe
     }
 }
 
+function validationResponseFunction(response, result, error, serverErrorMessage, successStatusCode, successJson) {
+    if (error) {
+        response.status(422);
+        response.json({
+            validationErrorMessage: error.message
+        });
+    } else {
+        responseFunction(response, result, 500, serverErrorMessage, successStatusCode, successJson);
+    }
+}
+
 module.exports = function (app, crud, collectionName) {
 
     app.get(`/${collectionName}/listar`, function (req, res) {
@@ -38,14 +49,14 @@ module.exports = function (app, crud, collectionName) {
     });
 
     app.post(`/${collectionName}/crear`, function (req, res) {
-        crud.createEntity(collectionName, req.body, function (entityId) {
-            responseFunction(
+        crud.createEntity(collectionName, req.body, function (result, error) {
+            validationResponseFunction(
                 res,
-                entityId,
-                500,
+                result,
+                error,
                 `No se ha podido crear la entidad proporcionada en ${collectionName}`,
                 201,
-                { entityId }
+                { result }
             );
         });
     });
@@ -53,11 +64,11 @@ module.exports = function (app, crud, collectionName) {
     app.post(`/${collectionName}/actualizar`, function (req, res) {
         let entityId = req.body.entityId;
         if (isIdValid(entityId, res)) {
-            crud.updateEntity(collectionName, entityId, req.body, function (result) {
-                responseFunction(
+            crud.updateEntity(collectionName, entityId, req.body, function (result, error) {
+                validationResponseFunction(
                     res,
                     result,
-                    500,
+                    error,
                     `No se ha podido modificar la entidad proporcionada en ${collectionName}`,
                     200,
                     { message: "modificado" }
