@@ -57,7 +57,7 @@ module.exports = {
                     callbackFunction(result, error);
                 });
             }
-        }
+        };
         switch (collectionName) {
             case "actividades": this.factory.updateActivity(entity, callback); break;
             case "categorias": this.factory.updateCategory(entity, callback); break;
