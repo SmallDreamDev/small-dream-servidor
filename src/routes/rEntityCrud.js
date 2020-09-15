@@ -109,4 +109,20 @@ module.exports = function (app, crud, collectionName) {
         }
     });
 
+    app.get(`/${collectionName}/detalles/:id`, function (req, res) {
+        let entityId = req.params.id;
+        if (isIdValid(entityId, res)) {
+            crud.getInstanceDetails(collectionName, entityId, function (entityDetails) {
+                responseFunction(
+                    res,
+                    entityDetails,
+                    500,
+                    `No se han podido obtener los detalles de la entidad solicitada desde ${collectionName}`,
+                    200,
+                    { entityDetails }
+                )
+            });
+        }
+    })
+
 };

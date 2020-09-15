@@ -16,6 +16,20 @@ module.exports = {
             callbackFunction(instance);
         });
     },
+    getInstanceDetails: function (collectionName, id, callbackFunction) {
+        let _this = this;
+        this.getInstance(collectionName, id, function (instance) {
+            switch (collectionName) {
+                case "actividades": _this.getDetailsActivity(instance, callbackFunction); break;
+                case "categorias": _this.getDetailsCategory(instance, callbackFunction); break;
+                case "clientes": _this.getDetailsClient(instance, callbackFunction); break;
+                case "monitores": _this.getDetailsInstructor(instance, callbackFunction); break;
+                case "materiales": _this.getDetailsMaterial(instance, callbackFunction); break;
+                case "talleres": _this.getDetailsWorkshop(instance, callbackFunction); break;
+                default: break;
+            }
+        });
+    },
     createEntity: function (collectionName, requestBody, callbackFunction) {
         let _gestorBD = this.gestorBD;
         let callback = function (newEntity) {
@@ -72,6 +86,116 @@ module.exports = {
         let criteria = { _id: this.gestorBD.mongo.ObjectID(entityId) };
         this.gestorBD.deleteEntity(collectionName, criteria, function (result) {
             callbackFunction(result);
+        });
+    },
+    getDetailsActivity(activity, callbackFunction) {
+        let categoryIds = activity.categorias ? activity.categorias : [];
+        let materialIds = activity.materiales ? activity.materiales : [];
+        let categoryCriteria = { "_id": { $in: categoryIds } };
+        let materialCriteria = { "_id": { $in: materialIds } };
+        let _this = this;
+        if (categoryIds.length > 0) {
+            this.listCollection("categorias", categoryCriteria, function (categoryList) {
+                activity.categorias = categoryList;
+                if (materialIds.length > 0) {
+                    _this.listCollection("materiales", materialCriteria, function (materialList) {
+                        activity.materiales = materialList;
+                        callbackFunction(activity);
+                    });
+                } else {
+                    activity.materiales = [];
+                    callbackFunction(activity);
+                }
+            });
+        } else if (materialIds.length > 0) {
+            this.listCollection("materiales", materialCriteria, function (materialList) {
+                activity.categorias = [];
+                activity.materiales = materialList;
+                callbackFunction(activity);
+            });
+        } else {
+            activity.categorias = [];
+            activity.materiales = [];
+            callbackFunction(activity);
+        }
+    },
+    getDetailsCategory(category, callbackFunction) {
+        let activityIds = category.actividades ? category.actividades : [];
+        let criteria = { "_id": { $in: activityIds } };
+        if (activityIds.length > 0) {
+            this.listCollection("actividades", criteria, function (activityList) {
+                category.actividades = activityList;
+                callbackFunction(category);
+            });
+        } else {
+            category.actividades = [];
+            callbackFunction(category);
+        }
+    },
+    getDetailsClient(client, callbackFunction) {
+        let workshopIds = client.talleres ? client.talleres : [];
+        let workshopCriteria = { "_id": { $in: workshopIds } };
+        let _this = this;
+        if (workshopIds.length > 0) {
+            this.listCollection("talleres", workshopCriteria, function (workshopList) {
+                let activityIds = [];
+                workshopList.forEach(function (w) {
+                    activityIds.push(w.id_actividad);
+                });
+                let activityCriteria = { "_id": { $in: activityIds } };
+                _this.listCollection("actividades", activityCriteria, function (activityList) {
+                    workshopList.forEach(function (w) {
+                        activityList.forEach(function (a) {
+                            if (w.id_actividad.equals(a._id)) {
+                                w.actividad = a;
+                                return;
+                            }
+                        });
+                    });
+                    client.talleres = workshopList;
+                    callbackFunction(client);
+                });
+
+            });
+        } else {
+            client.talleres = [];
+            callbackFunction(client);
+        }
+    },
+    getDetailsInstructor(instructor, callbackFunction) {
+        callbackFunction(instructor);
+    },
+    getDetailsMaterial(material, callbackFunction) {
+        let activityIds = material.actividades ? material.actividades : [];
+        let criteria = { "_id": { $in: activityIds } };
+        if (activityIds.length > 0) {
+            this.listCollection("actividades", criteria, function (activityList) {
+                material.actividades = activityList;
+                callbackFunction(material);
+            });
+        } else {
+            material.actividades = [];
+            callbackFunction(material);
+        }
+    },
+    getDetailsWorkshop(workshop, callbackFunction) {
+        let _this = this;
+        this.getInstance("actividades", workshop.id_actividad, function (activity) {
+            workshop.actividad = activity;
+            _this.getInstance("monitores", workshop.id_monitor, function (instructor) {
+                workshop.monitor = instructor;
+                let clientIds = workshop.clientes ? workshop.clientes : [];
+                let criteria = { "_id": { $in: clientIds } };
+                if (clientIds.length > 0) {
+                    _this.listCollection("clientes", criteria, function (clientList) {
+                        workshop.clientes = clientList;
+                        callbackFunction(workshop);
+                    });
+                } else {
+                    workshop.clientes = [];
+                    callbackFunction(workshop);
+                }
+            })
         });
     }
 };
