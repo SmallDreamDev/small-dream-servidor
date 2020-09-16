@@ -120,9 +120,9 @@ module.exports = function (app, crud, collectionName) {
                     `No se han podido obtener los detalles de la entidad solicitada desde ${collectionName}`,
                     200,
                     { entityDetails }
-                )
+                );
             });
         }
-    })
+    });
 
 };

@@ -195,7 +195,7 @@ module.exports = {
                     workshop.clientes = [];
                     callbackFunction(workshop);
                 }
-            })
+            });
         });
     }
 };
