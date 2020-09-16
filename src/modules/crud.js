@@ -32,12 +32,12 @@ module.exports = {
     },
     createEntity: function (collectionName, requestBody, callbackFunction) {
         let _gestorBD = this.gestorBD;
-        let callback = function (newEntity) {
-            if (newEntity === null) {
-                callbackFunction(null);
+        let callback = function (newEntity, error) {
+            if (error) {
+                callbackFunction(null, error);
             } else {
                 _gestorBD.insertEntity(collectionName, newEntity, function (id) {
-                    callbackFunction(id.str);
+                    callbackFunction(id.str, error);
                 });
             }
         };
