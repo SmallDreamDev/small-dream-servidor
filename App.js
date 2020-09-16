@@ -78,6 +78,7 @@ require("./src/routes/rEntityCrud.js")(app, crud, "modosDePago");
 require("./src/routes/rEntityCrud.js")(app, crud, "perteneceA");
 require("./src/routes/rEntityCrud.js")(app, crud, "usa");
 require("./src/routes/rEntityCrud.js")(app, crud, "apuntado");
+require("./src/routes/rEntityCrud.js")(app, crud, "asistencia");
 
 // -- User management
 require("./src/routes/rUserLogin.js")(app, gestorBD, schemas);

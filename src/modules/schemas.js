@@ -6,7 +6,7 @@ let dniSubschema = joi.string()
     .pattern(/(([x-z]|[X-Z]{1})([-]?)(\d{7})([-]?)([a-z]|[A-Z]{1}))|((\d{8})([-]?)([a-z]|[A-Z]{1}))/)
     .message("No es un DNI válido");
 let dateSubschema = joi.date()
-    .format("DD/MM/YYYY")
+    .format("YYYY/MM/DD")
     .raw()
     .greater("1-1-1900")
     .less("now")

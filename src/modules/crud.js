@@ -21,6 +21,7 @@ module.exports = {
         this.getInstance(collectionName, id, function (instance) {
             switch (collectionName) {
                 case "actividades": _this.getDetailsActivity(instance, callbackFunction); break;
+                case "asistencia": _this.getDetailsAttendance(instance, callbackFunction); break;
                 case "categorias": _this.getDetailsCategory(instance, callbackFunction); break;
                 case "clientes": _this.getDetailsClient(instance, callbackFunction); break;
                 case "monitores": _this.getDetailsInstructor(instance, callbackFunction); break;
@@ -44,11 +45,12 @@ module.exports = {
 
         switch (collectionName) {
             case "actividades": this.factory.createActivity(requestBody, callback); break;
+            case "asistencia": this.factory.createAttendance(requestBody, this.gestorBD, callback); break;
             case "categorias": this.factory.createCategory(requestBody, callback); break;
             case "clientes": this.factory.createClient(requestBody, callback); break;
             case "monitores": this.factory.createInstructor(requestBody, callback); break;
             case "materiales": this.factory.createMaterial(requestBody, callback); break;
-            case "talleres": this.factory.createWorkshop(requestBody, callback); break;
+            case "talleres": this.factory.createWorkshop(requestBody, this.gestorBD, callback); break;
             case "modosDePago": this.factory.createPaymentMethod(requestBody, callback); break;
             case "perteneceA": this.factory.createRelationshipActivityCategory(requestBody, callback); break;
             case "usa": this.factory.createRelationshipActivityMaterial(requestBody, callback); break;
@@ -74,6 +76,7 @@ module.exports = {
         };
         switch (collectionName) {
             case "actividades": this.factory.updateActivity(entity, callback); break;
+            case "asistencia": callback(); break;
             case "categorias": this.factory.updateCategory(entity, callback); break;
             case "clientes": this.factory.updateClient(entity, callback); break;
             case "monitores": this.factory.updateInstructor(entity, callback); break;
@@ -119,6 +122,16 @@ module.exports = {
             callbackFunction(activity);
         }
     },
+    getDetailsAttendance(attendance, callbackFunction) {
+        let _this = this;
+        this.getInstance("talleres", attendace.id_taller, function (workshop) {
+            attendance.taller = workshop;
+            _this.getInstance("clientes", attendance.id_cliente, function (client) {
+                attendance.cliente = client;
+                callbackFunction(attendance);
+            });
+        });
+    },
     getDetailsCategory(category, callbackFunction) {
         let activityIds = category.actividades ? category.actividades : [];
         let criteria = { "_id": { $in: activityIds } };
@@ -153,7 +166,19 @@ module.exports = {
                         });
                     });
                     client.talleres = workshopList;
-                    callbackFunction(client);
+                    let attendanceCriteria = { "id_cliente": client._id };
+                    _this.listCollection("asistencia", attendanceCriteria, function (attendanceList) {
+                        client.talleres.forEach(function (w) {
+                            attendanceList.forEach(function (att) {
+                                if(w._id.equals(att.id_taller)){
+                                    w.asistido = true;
+                                    return;
+                                }
+                            });
+                            w.asistido ? w.asistido = true : w.asistido = false;
+                        });
+                        callbackFunction(client);
+                    });
                 });
 
             });
