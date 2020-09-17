@@ -15,6 +15,13 @@ module.exports = {
         };
         validate(activityToValidate, this.schemas.activitySchema, functionCallback);
     },
+    createAttendance: function (requestBody, gestorBD, functionCallback) {
+        let attendance = {
+            id_taller: gestorBD.mongo.ObjectID(requestBody.id_taller),
+            id_cliente: gestorBD.mongo.ObjectID(requestBody.id_cliente)
+        };
+        functionCallback(attendance);
+    },
     createCategory: function (requestBody, functionCallback) {
         let categoryToValidate = {
             nombre: requestBody.nombre,
@@ -46,15 +53,15 @@ module.exports = {
         };
         validate(materialToValidate, this.schemas.materialSchema, functionCallback);
     },
-    createWorkshop: function (requestBody, functionCallback) {
+    createWorkshop: function (requestBody, gestorBD, functionCallback) {
         let workshopToValidate = {
-            id_monitor: requestBody.id_monitor,
-            id_actividad: requestBody.id_actividad,
+            id_monitor: gestorBD.mongo.ObjectID(requestBody.id_monitor),
+            id_actividad: gestorBD.mongo.ObjectID(requestBody.id_actividad),
             fecha: requestBody.fecha,
             hora_inicio: requestBody.hora_inicio,
             hora_fin: requestBody.hora_fin,
             plazas: requestBody.plazas,
-            id_modo_pago: requestBody.id_modo_pago
+            id_modo_pago: gestorBD.mongo.ObjectID(requestBody.id_modo_pago)
         };
         validate(workshopToValidate, this.schemas.workshopSchema, functionCallback);
     },
