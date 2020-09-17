@@ -24,8 +24,7 @@ module.exports = {
     },
     createCategory: function (requestBody, functionCallback) {
         let categoryToValidate = {
-            nombre: requestBody.nombre,
-            zona: requestBody.zona
+            nombre: requestBody.nombre
         };
         validate(categoryToValidate, this.schemas.categorySchema, functionCallback);
     },
