@@ -44,13 +44,16 @@ module.exports = {
         descripcion: stringSubschema.message("No es una descripción válida")
     }),
     workshopSchema: joi.object({
-        id_modo_pago: stringSubschema,
         id_monitor: stringSubschema,
         id_actividad: stringSubschema,
         fecha: dateSubschema,
         hora_inicio: timeSubschema,
         hora_fin: timeSubschema,
-        plazas: numberSubschema.message("El número de plazas no puede ser inferior a 0")
+        plazas: numberSubschema.message("El número de plazas no puede ser inferior a 0"),
+        modo_pago: joi.string().valid("€/hora", "€/cliente").messages({
+            "any": "El modo de pago no es válido"
+        }),
+        importe: numberSubschema.message("El importe no puede ser inferior a 0")
     }),
     userLoginSchema: joi.object({
         nombre_usuario: stringSubschema,

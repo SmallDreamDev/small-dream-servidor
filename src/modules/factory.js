@@ -61,7 +61,8 @@ module.exports = {
             hora_inicio: requestBody.hora_inicio,
             hora_fin: requestBody.hora_fin,
             plazas: requestBody.plazas,
-            id_modo_pago: gestorBD.mongo.ObjectID(requestBody.id_modo_pago)
+            modo_pago: requestBody.modo_pago,
+            importe: requestBody.importe
         };
         validate(workshopToValidate, this.schemas.workshopSchema, functionCallback);
     },
