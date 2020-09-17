@@ -1,6 +1,6 @@
 function validate(entityToValidate, schema, functionCallback) {
-    let { error } = schema.validate(entityToValidate);
-    functionCallback(error);
+    let { value, error } = schema.validate(entityToValidate);
+    functionCallback(value, error);
 }
 
 module.exports = {
