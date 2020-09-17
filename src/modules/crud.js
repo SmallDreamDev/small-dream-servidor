@@ -124,7 +124,7 @@ module.exports = {
     },
     getDetailsAttendance(attendance, callbackFunction) {
         let _this = this;
-        this.getInstance("talleres", attendace.id_taller, function (workshop) {
+        this.getInstance("talleres", attendance.id_taller, function (workshop) {
             attendance.taller = workshop;
             _this.getInstance("clientes", attendance.id_cliente, function (client) {
                 attendance.cliente = client;

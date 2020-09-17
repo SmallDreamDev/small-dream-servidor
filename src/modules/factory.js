@@ -19,7 +19,7 @@ module.exports = {
         let attendance = {
             id_taller: gestorBD.mongo.ObjectID(requestBody.id_taller),
             id_cliente: gestorBD.mongo.ObjectID(requestBody.id_cliente)
-        }
+        };
         functionCallback(attendance);
     },
     createCategory: function (requestBody, functionCallback) {
