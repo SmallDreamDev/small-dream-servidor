@@ -6,9 +6,16 @@ module.exports = {
         this.factory = factory;
     },
     listCollection: function (collectionName, criteria, callbackFunction) {
-        this.gestorBD.getEntityCollection(collectionName, criteria, function (collectionList) {
-            callbackFunction(collectionList);
-        });
+        switch (collectionName) {
+            case "actividades": this.gestorBD.getEntityCollection(collectionName, criteria, callbackFunction); break;
+            case "asistencia": this.gestorBD.getEntityCollection(collectionName, criteria, callbackFunction); break;
+            case "categorias": this.gestorBD.getEntityCollection(collectionName, criteria, callbackFunction); break;
+            case "clientes": this.gestorBD.getEntityCollection(collectionName, criteria, callbackFunction); break;
+            case "monitores": this.gestorBD.getEntityCollection(collectionName, criteria, callbackFunction); break;
+            case "materiales": this.gestorBD.getEntityCollection(collectionName, criteria, callbackFunction); break;
+            case "talleres": this.getWorkshopsCollection(criteria, callbackFunction); break;
+            default: break;
+        }
     },
     getInstance: function (collectionName, id, callbackFunction) {
         id = this.gestorBD.mongo.ObjectID(id);
@@ -170,7 +177,7 @@ module.exports = {
                     _this.listCollection("asistencia", attendanceCriteria, function (attendanceList) {
                         client.talleres.forEach(function (w) {
                             attendanceList.forEach(function (att) {
-                                if(w._id.equals(att.id_taller)){
+                                if (w._id.equals(att.id_taller)) {
                                     w.asistido = true;
                                     return;
                                 }
@@ -221,6 +228,35 @@ module.exports = {
                     callbackFunction(workshop);
                 }
             });
+        });
+    },
+    getWorkshopsCollection(criteria, callbackFunction) {
+        let _this = this;
+        this.gestorBD.getEntityCollection("talleres", criteria, function (workshopList) {
+            let activityIds = workshopList.map(function (w) { return w.id_actividad; });
+            let activityCriteria = { "_id": { $in: activityIds } };
+            _this.listCollection("actividades", activityCriteria, function (activityList) {
+                workshopList.forEach(function (w) {
+                    activityList.forEach(function (a) {
+                        if (w.id_actividad.equals(a._id)) {
+                            w.nombre_actividad = a.nombre;
+                        }
+                    });
+                });
+                let instructorIds = workshopList.map(function (w) { return w.id_monitor; });
+                let instructorCriteria = { "_id": { $in: instructorIds } };
+                _this.listCollection("monitores", instructorCriteria, function(instructorList){
+                    workshopList.forEach(function(w){
+                        instructorList.forEach(function(i){
+                            if(w.id_monitor.equals(i._id)){
+                                w.nombre_monitor = i.nombre_completo;
+                            }
+                        });
+                    });
+                    callbackFunction(workshopList);
+                });
+            });
+
         });
     }
 };
