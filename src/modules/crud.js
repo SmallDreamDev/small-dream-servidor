@@ -181,7 +181,6 @@ module.exports = {
         });
     },
     deleteCascadeInstructors(instructorId, callbackFunction) {
-        console.log(instructorId);
         let workshopCriteria = { "id_monitor": this.gestorBD.mongo.ObjectID(instructorId) };
         let _this = this;
         this.gestorBD.getEntityCollection("talleres", workshopCriteria, function (list) {
