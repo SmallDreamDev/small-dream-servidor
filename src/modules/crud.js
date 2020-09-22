@@ -19,8 +19,9 @@ module.exports = {
     },
     getInstance: function (collectionName, id, callbackFunction) {
         id = this.gestorBD.mongo.ObjectID(id);
-        this.gestorBD.getEntityById(collectionName, id, function (instance) {
-            callbackFunction(instance);
+        let criteria = { "_id": id };
+        this.gestorBD.getEntityByCriteria(collectionName, criteria, function (list) {
+            callbackFunction(list[0]);
         });
     },
     getInstanceDetails: function (collectionName, id, callbackFunction) {
@@ -94,8 +95,135 @@ module.exports = {
     },
     deleteEntity: function (collectionName, entityId, callbackFunction) {
         let criteria = { _id: this.gestorBD.mongo.ObjectID(entityId) };
+        let _this = this;
         this.gestorBD.deleteEntity(collectionName, criteria, function (result) {
-            callbackFunction(result);
+            switch (collectionName) {
+                case "actividades": _this.deleteCascadeActivities(entityId, callbackFunction); break;
+                case "asistencia": _this.callbackFunction(result); break;
+                case "categorias": _this.deleteCascadeCategories(entityId, callbackFunction); break;
+                case "clientes": _this.deleteCascadeClients(entityId, callbackFunction); break;
+                case "monitores": _this.deleteCascadeInstructors(entityId, callbackFunction); break;
+                case "materiales": _this.deleteCascadeMaterials(entityId, callbackFunction); break;
+                case "talleres": _this.deleteCascadeWorkshops(entityId, callbackFunction); break;
+                default: break;
+            }
+        });
+    },
+    deleteCascadeActivities(activityId, callbackFunction) {
+        let activityCriteria = { "actividades": this.gestorBD.mongo.ObjectID(activityId) };
+        let _this = this;
+        this.gestorBD.deleteElementsFromArray("categorias", {}, activityCriteria, function (isDeleted) {
+            if (!isDeleted) {
+                callbackFunction(null, "Ha habido un error borrando la actividad");
+            } else {
+                _this.gestorBD.deleteElementsFromArray("materiales", {}, activityCriteria, function (isDeleted) {
+                    if (!isDeleted) {
+                        callbackFunction(null, "Ha habido un error borrando la actividad");
+                    } else {
+                        let workshopCriteria = { "id_actividad": _this.gestorBD.mongo.ObjectID(activityId) };
+                        _this.gestorBD.getEntityCollection("talleres", workshopCriteria, function (list) {
+                            _this.gestorBD.deleteEntity("talleres", workshopCriteria, function (isDeleted) {
+                                if (!isDeleted) {
+                                    callbackFunction(null, "Ha habido un error borrando los talleres asociados");
+                                } else {
+                                    let workshopIds = list.map(function (w) { return w._id; });
+                                    let clientCriteria = { "talleres": { $in: workshopIds } };
+                                    _this.gestorBD.deleteElementsFromArray("clientes", {}, clientCriteria, function (isDeleted) {
+                                        if (!isDeleted) {
+                                            callbackFunction(null, "Ha habido un error borrando los talleres asociados");
+                                        } else {
+                                            let attendanceCriteria = { "id_taller": { $in: workshopIds } };
+                                            _this.gestorBD.deleteEntity("asistencia", attendanceCriteria, function (isDeleted) {
+                                                if (!isDeleted) {
+                                                    callbackFunction(null, "Ha habido un error borrando el registro de asistencias asociado");
+                                                } else {
+                                                    callbackFunction(isDeleted);
+                                                }
+                                            });
+                                        }
+                                    });
+                                }
+                            });
+                        });
+                    }
+                });
+            }
+        });
+    },
+    deleteCascadeCategories(categoryId, callbackFunction) {
+        let categoryCriteria = { "categorias": this.gestorBD.mongo.ObjectID(categoryId) };
+        this.gestorBD.deleteElementsFromArray("actividades", {}, categoryCriteria, function (isDeleted) {
+            if (!isDeleted) {
+                callbackFunction(null, "Ha habido un error borrando la categoría");
+            } else {
+                callbackFunction(isDeleted);
+            }
+        });
+    },
+    deleteCascadeClients(clientId, callbackFunction) {
+        let clientCriteria = { "clientes": this.gestorBD.mongo.ObjectID(clientId) };
+        this.gestorBD.deleteElementsFromArray("talleres", {}, clientCriteria, function (isDeleted) {
+            if (!isDeleted) {
+                callbackFunction(null, "Ha habido un error borrando el cliente");
+            } else {
+                callbackFunction(isDeleted);
+            }
+        });
+    },
+    deleteCascadeMaterials(materialId, callbackFunction) {
+        let materialCriteria = { "materiales": this.gestorBD.mongo.ObjectID(materialId) };
+        this.gestorBD.deleteElementsFromArray("actividades", {}, materialCriteria, function (isDeleted) {
+            if (!isDeleted) {
+                callbackFunction(null, "Ha habido un error borrando el material");
+            } else {
+                callbackFunction(isDeleted);
+            }
+        });
+    },
+    deleteCascadeInstructors(instructorId, callbackFunction) {
+        let workshopCriteria = { "id_monitor": this.gestorBD.mongo.ObjectID(instructorId) };
+        let _this = this;
+        this.gestorBD.getEntityCollection("talleres", workshopCriteria, function (list) {
+            _this.gestorBD.deleteEntity("talleres", workshopCriteria, function (isDeleted) {
+                if (!isDeleted) {
+                    callbackFunction(null, "Ha habido un error borrando los talleres asociados");
+                } else {
+                    let workshopIds = list.map(function (w) { return w._id; });
+                    let clientCriteria = { "talleres": { $in: workshopIds } };
+                    _this.gestorBD.deleteElementsFromArray("clientes", {}, clientCriteria, function (isDeleted) {
+                        if (!isDeleted) {
+                            callbackFunction(null, "Ha habido un error borrando los talleres asociados");
+                        } else {
+                            let attendanceCriteria = { "id_taller": { $in: workshopIds } };
+                            _this.gestorBD.deleteEntity("asistencia", attendanceCriteria, function (isDeleted) {
+                                if (!isDeleted) {
+                                    callbackFunction(null, "Ha habido un error borrando el registro de asistencias asociado");
+                                } else {
+                                    callbackFunction(isDeleted);
+                                }
+                            });
+                        }
+                    });
+                }
+            });
+        });
+    },
+    deleteCascadeWorkshops(workshopId, callbackFunction) {
+        let workshopCriteria = { "talleres": this.gestorBD.mongo.ObjectID(workshopId) };
+        let _this = this;
+        this.gestorBD.deleteElementsFromArray("clientes", {}, workshopCriteria, function (isDeleted) {
+            if (!isDeleted) {
+                callbackFunction(null, "Ha habido un error borrando el taller");
+            } else {
+                let attendanceCriteria = { "id_taller": _this.gestorBD.mongo.ObjectID(workshopId) };
+                _this.gestorBD.deleteEntity("asistencia", attendanceCriteria, function (isDeleted) {
+                    if (!isDeleted) {
+                        callbackFunction(null, "Ha habido un error borrando el registro de asistencias asociado");
+                    } else {
+                        callbackFunction(isDeleted);
+                    }
+                });
+            }
         });
     },
     getDetailsActivity(activity, callbackFunction) {
@@ -245,10 +373,10 @@ module.exports = {
                 });
                 let instructorIds = workshopList.map(function (w) { return w.id_monitor; });
                 let instructorCriteria = { "_id": { $in: instructorIds } };
-                _this.listCollection("monitores", instructorCriteria, function(instructorList){
-                    workshopList.forEach(function(w){
-                        instructorList.forEach(function(i){
-                            if(w.id_monitor.equals(i._id)){
+                _this.listCollection("monitores", instructorCriteria, function (instructorList) {
+                    workshopList.forEach(function (w) {
+                        instructorList.forEach(function (i) {
+                            if (w.id_monitor.equals(i._id)) {
                                 w.nombre_monitor = i.nombre_completo;
                             }
                         });

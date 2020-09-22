@@ -80,12 +80,12 @@ module.exports = function (app, crud, collectionName) {
     app.post(`/${collectionName}/eliminar`, function (req, res) {
         let entityId = req.body.entityId;
         if (isIdValid(entityId, res)) {
-            crud.deleteEntity(collectionName, entityId, function (result) {
+            crud.deleteEntity(collectionName, entityId, function (result, error) {
                 responseFunction(
                     res,
                     result,
                     500,
-                    `No se ha podido eliminar la entidad proporcionada en ${collectionName}`,
+                    error,
                     200,
                     { message: "eliminado" }
                 );

@@ -18,15 +18,14 @@ module.exports = {
             }
         });
     },
-    getEntityById: function (collectionName, id, functionCallback) {
+    getEntityByCriteria: function (collectionName, criteria, functionCallback) {
         this.mongo.MongoClient.connect(this.app.get('db'), function (err, db) {
             if (err) {
                 functionCallback(null);
             } else {
                 let collection = db.collection(collectionName);
-                var criteria = { "_id": id }
                 collection.find(criteria).toArray(function (err, list) {
-                    functionCallback(err ? null : list[0]);
+                    functionCallback(err ? null : list);
                     db.close();
                 });
             }
@@ -65,6 +64,19 @@ module.exports = {
             } else {
                 let collection = db.collection(collectionName);
                 collection.remove(criteria, function (err, result) {
+                    functionCallback(err ? null : result);
+                    db.close();
+                });
+            }
+        });
+    },
+    deleteElementsFromArray: function (collectionName, criteria, jsonPull, functionCallback) {
+        this.mongo.MongoClient.connect(this.app.get('db'), function (err, db) {
+            if (err) {
+                functionCallback(null);
+            } else {
+                let collection = db.collection(collectionName);
+                collection.update(criteria, { $pull: jsonPull }, function (err, result) {
                     functionCallback(err ? null : result);
                     db.close();
                 });
