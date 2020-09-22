@@ -28,13 +28,13 @@ module.exports = {
         let _this = this;
         this.getInstance(collectionName, id, function (instance) {
             switch (collectionName) {
-                case "actividades": _this.getDetailsActivity(instance[0], callbackFunction); break;
-                case "asistencia": _this.getDetailsAttendance(instance[0], callbackFunction); break;
-                case "categorias": _this.getDetailsCategory(instance[0], callbackFunction); break;
-                case "clientes": _this.getDetailsClient(instance[0], callbackFunction); break;
-                case "monitores": _this.getDetailsInstructor(instance[0], callbackFunction); break;
-                case "materiales": _this.getDetailsMaterial(instance[0], callbackFunction); break;
-                case "talleres": _this.getDetailsWorkshop(instance[0], callbackFunction); break;
+                case "actividades": _this.getDetailsActivity(instance, callbackFunction); break;
+                case "asistencia": _this.getDetailsAttendance(instance, callbackFunction); break;
+                case "categorias": _this.getDetailsCategory(instance, callbackFunction); break;
+                case "clientes": _this.getDetailsClient(instance, callbackFunction); break;
+                case "monitores": _this.getDetailsInstructor(instance, callbackFunction); break;
+                case "materiales": _this.getDetailsMaterial(instance, callbackFunction); break;
+                case "talleres": _this.getDetailsWorkshop(instance, callbackFunction); break;
                 default: break;
             }
         });
@@ -95,15 +95,16 @@ module.exports = {
     },
     deleteEntity: function (collectionName, entityId, callbackFunction) {
         let criteria = { _id: this.gestorBD.mongo.ObjectID(entityId) };
+        let _this = this;
         this.gestorBD.deleteEntity(collectionName, criteria, function (result) {
             switch (collectionName) {
-                case "actividades": deleteCascadeActivities(entityId, callbackFunction); break;
-                case "asistencia": callbackFunction(result); break;
-                case "categorias": deleteCascadeCategories(entityId, callbackFunction); break;
-                case "clientes": deleteCascadeClients(entityId, callbackFunction); break;
-                case "monitores": deleteCascadeInstructors(result); break;
-                case "materiales": deleteCascadeMaterials(entityId, callbackFunction); break;
-                case "talleres": deleteCascadeWorkshops(entityId, callbackFunction); break;
+                case "actividades": _this.deleteCascadeActivities(entityId, callbackFunction); break;
+                case "asistencia": _this.callbackFunction(result); break;
+                case "categorias": _this.deleteCascadeCategories(entityId, callbackFunction); break;
+                case "clientes": _this.deleteCascadeClients(entityId, callbackFunction); break;
+                case "monitores": _this.deleteCascadeInstructors(entityId, callbackFunction); break;
+                case "materiales": _this.deleteCascadeMaterials(entityId, callbackFunction); break;
+                case "talleres": _this.deleteCascadeWorkshops(entityId, callbackFunction); break;
                 default: break;
             }
         });
@@ -119,8 +120,8 @@ module.exports = {
                     if (!isDeleted) {
                         callbackFunction(null, "Ha habido un error borrando la actividad");
                     } else {
-                        let workshopCriteria = { "id_actividad": this.gestorBD.mongo.ObjectID(activityId) };
-                        _this.gestorBD.listCollection("talleres", workshopCriteria, function (list) {
+                        let workshopCriteria = { "id_actividad": _this.gestorBD.mongo.ObjectID(activityId) };
+                        _this.gestorBD.getEntityCollection("talleres", workshopCriteria, function (list) {
                             _this.gestorBD.deleteEntity("talleres", workshopCriteria, function (isDeleted) {
                                 if (!isDeleted) {
                                     callbackFunction(null, "Ha habido un error borrando los talleres asociados");
@@ -131,7 +132,14 @@ module.exports = {
                                         if (!isDeleted) {
                                             callbackFunction(null, "Ha habido un error borrando los talleres asociados");
                                         } else {
-                                            callbackFunction(isDeleted);
+                                            let attendanceCriteria = { "id_taller": { $in: workshopIds } };
+                                            _this.gestorBD.deleteEntity("asistencia", attendanceCriteria, function (isDeleted) {
+                                                if (!isDeleted) {
+                                                    callbackFunction(null, "Ha habido un error borrando el registro de asistencias asociado");
+                                                } else {
+                                                    callbackFunction(isDeleted);
+                                                }
+                                            });
                                         }
                                     });
                                 }
@@ -173,9 +181,10 @@ module.exports = {
         });
     },
     deleteCascadeInstructors(instructorId, callbackFunction) {
+        console.log(instructorId);
         let workshopCriteria = { "id_monitor": this.gestorBD.mongo.ObjectID(instructorId) };
         let _this = this;
-        this.gestorBD.listCollection("talleres", workshopCriteria, function (list) {
+        this.gestorBD.getEntityCollection("talleres", workshopCriteria, function (list) {
             _this.gestorBD.deleteEntity("talleres", workshopCriteria, function (isDeleted) {
                 if (!isDeleted) {
                     callbackFunction(null, "Ha habido un error borrando los talleres asociados");
@@ -186,20 +195,35 @@ module.exports = {
                         if (!isDeleted) {
                             callbackFunction(null, "Ha habido un error borrando los talleres asociados");
                         } else {
-                            callbackFunction(isDeleted);
+                            let attendanceCriteria = { "id_taller": { $in: workshopIds } };
+                            _this.gestorBD.deleteEntity("asistencia", attendanceCriteria, function (isDeleted) {
+                                if (!isDeleted) {
+                                    callbackFunction(null, "Ha habido un error borrando el registro de asistencias asociado");
+                                } else {
+                                    callbackFunction(isDeleted);
+                                }
+                            });
                         }
                     });
                 }
             });
         });
     },
-    deleteCascadeWorkshops(workshopId, callbackFunction){
+    deleteCascadeWorkshops(workshopId, callbackFunction) {
         let workshopCriteria = { "talleres": this.gestorBD.mongo.ObjectID(workshopId) };
+        let _this = this;
         this.gestorBD.deleteElementsFromArray("clientes", {}, workshopCriteria, function (isDeleted) {
             if (!isDeleted) {
                 callbackFunction(null, "Ha habido un error borrando el taller");
             } else {
-                callbackFunction(isDeleted);
+                let attendanceCriteria = { "id_taller": _this.gestorBD.mongo.ObjectID(workshopId) };
+                _this.gestorBD.deleteEntity("asistencia", attendanceCriteria, function (isDeleted) {
+                    if (!isDeleted) {
+                        callbackFunction(null, "Ha habido un error borrando el registro de asistencias asociado");
+                    } else {
+                        callbackFunction(isDeleted);
+                    }
+                });
             }
         });
     },
