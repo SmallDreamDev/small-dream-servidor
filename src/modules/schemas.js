@@ -16,6 +16,7 @@ let timeSubschema = joi.string()
     .message("No es una hora válida");
 let numberSubschema = joi.number()
     .min(0);
+let id_subschema = joi.object();
 
 module.exports = {
     activitySchema: joi.object({
@@ -44,8 +45,8 @@ module.exports = {
         descripcion: stringSubschema.message("No es una descripción válida")
     }),
     workshopSchema: joi.object({
-        id_monitor: stringSubschema,
-        id_actividad: stringSubschema,
+        id_monitor: id_subschema,
+        id_actividad: id_subschema,
         fecha: dateSubschema,
         hora_inicio: timeSubschema,
         hora_fin: timeSubschema,
