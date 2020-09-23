@@ -99,7 +99,7 @@ module.exports = {
         this.gestorBD.deleteEntity(collectionName, criteria, function (result) {
             switch (collectionName) {
                 case "actividades": _this.deleteCascadeActivities(entityId, callbackFunction); break;
-                case "asistencia": _this.callbackFunction(result); break;
+                case "asistencia": callbackFunction(result); break;
                 case "categorias": _this.deleteCascadeCategories(entityId, callbackFunction); break;
                 case "clientes": _this.deleteCascadeClients(entityId, callbackFunction); break;
                 case "monitores": _this.deleteCascadeInstructors(entityId, callbackFunction); break;
